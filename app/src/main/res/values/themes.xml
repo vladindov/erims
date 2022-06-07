@@ -1,0 +1,6 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.EarMem" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimaryDark">#32CCE1</item>
+    </style>
+</resources>

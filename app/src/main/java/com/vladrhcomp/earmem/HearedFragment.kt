@@ -1,0 +1,49 @@
+package com.vladrhcomp.earmem
+
+import android.content.Context
+import android.os.Bundle
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+
+
+class HearedFragment: Fragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.heared_text,container,false)
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val edit = view.findViewById<EditText>(R.id.editTextHeared)
+
+        view.findViewById<Button>(R.id.hearedButton).setOnClickListener {
+            (activity as MainActivity).checkText(view.context, edit.text.toString())
+        }
+
+        edit.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            Toast.makeText(context, event.keyCode.toString(), Toast.LENGTH_SHORT).show()
+
+            if (event != null && event.keyCode == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                (activity as MainActivity).checkText(view.context, edit.text.toString())
+            }
+
+            true
+        })
+    }
+
+    companion object{
+        fun newInsance() = HearedFragment()
+    }
+}

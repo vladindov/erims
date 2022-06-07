@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/back_ground.xml" value="0.3275" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/button_background.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/edit_frame.xml" value="0.3275" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_choose.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.343" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_heared.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_level1.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_mic.xml" value="0.3315" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_what.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/bottom_nav.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/check.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/clap_handler.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/fragment_start.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels_2.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels_3.xml" value="0.33" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels_4.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels_5.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels_6.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_text.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/main_activity.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/main_screen.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/start_menu.xml" value="0.25" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/textheared.xml" value="0.25" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/what_it_frag.xml" value="0.3859375" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/what_it_fragment.xml" value="0.3859375" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/what_levels_1.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/what_levels_2.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/what_levels_3.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/what_levels_4.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/menu/bottom_navigation.xml" value="0.38697916666666665" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

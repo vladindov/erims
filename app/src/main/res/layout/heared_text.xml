@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="86dp"
+            android:layout_height="30dp"
+            android:backgroundTint="#00111111"
+            android:contentDescription="back"
+            android:scaleType="fitCenter"
+            android:paddingHorizontal="0dp"
+            android:paddingVertical="0dp"
+            tools:ignore="TouchTargetSizeCheck"
+            app:srcCompat="@drawable/back"
+            android:onClick="back"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textHearedLevel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Уровень"
+        android:textSize="23dp"
+        android:textStyle="bold"
+        android:layout_weight="2"/>
+
+    <ImageButton
+        android:id="@+id/imageButtonHeared"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/ic_audio_play"
+        android:background="@color/white"
+        android:contentDescription="listen"
+        android:onClick="Play"
+        android:backgroundTint="#00111111"
+        android:layout_weight="4"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="2">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="29dp"
+            android:text="Напишите услышанное:"
+            android:textSize="18dp" />
+
+        <ImageButton
+            android:id="@+id/imageButtonHearedMic"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:backgroundTint="#00111111"
+            android:onClick="Say"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_mic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10">
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:srcCompat="@color/white" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/editTextHeared"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_weight="5"
+                android:background="@drawable/edit_frame"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="Напишите услышанное"
+                android:imeActionLabel="Проверить"
+                android:imeOptions="actionNext"
+                android:inputType="textMultiLine"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="4dp" />
+
+            <Button
+                android:id="@+id/hearedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#4aaf78"
+                android:text="Оправить"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:srcCompat="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="9000"
+        android:orientation="vertical"></LinearLayout>
+
+</LinearLayout>
