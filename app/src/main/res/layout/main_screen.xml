@@ -34,11 +34,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/elephant"
-        android:alpha="0.3"/><![CDATA[
+        android:alpha="1"/>
 
-
-        tools:layout_editor_absoluteX=195dp"
-        tools:layout_editor_absoluteY="11dp" />
-
-]]>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/ratingContainer"
+        android:name="com.vladrhcomp.earmem.RatingFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="58dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

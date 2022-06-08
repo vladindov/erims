@@ -6,15 +6,19 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentContainerView
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory
 import be.tarsos.dsp.onsets.OnsetHandler
 import be.tarsos.dsp.onsets.PercussionOnsetDetector
@@ -31,10 +35,28 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<BottomNavigationView>(R.id.navigation_view).setOnItemSelectedListener{ item ->
             when (item.itemId) {
-                R.id.navigation_home -> Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
-                R.id.navigation_dashboard -> Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
-                R.id.navigation_notifications -> Toast.makeText(this,"Будет добавлено позже",Toast.LENGTH_SHORT).show()
-                R.id.navigation_stat -> Toast.makeText(this,"Будет добавлено позже",Toast.LENGTH_SHORT).show()
+                R.id.navigation_home -> {
+                    findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.GONE
+                    val set = item.icon
+                    set.mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN)
+                    item.icon = set
+                    supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
+                    return@setOnItemSelectedListener true
+                }
+                R.id.navigation_dashboard -> {
+                    Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
+                }
+                R.id.navigation_notifications -> {
+                    Toast.makeText(this,"Будет добавлено позже",Toast.LENGTH_SHORT).show()
+                }
+                R.id.navigation_stat -> {
+                    findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.VISIBLE
+                    val set = item.icon
+                    set.mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN)
+                    item.icon = set
+                    supportFragmentManager.beginTransaction().replace(R.id.ratingContainer, RatingFragment.newInsance()).commit()
+                    return@setOnItemSelectedListener true
+                }
             }
             false
         }
@@ -85,6 +107,7 @@ class MainActivity : AppCompatActivity() {
             if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.stop()!!
             val editor = sharPref?.edit()
             editor?.putInt("maxHearedLevel", num!!+1)
+            editor?.putInt("Rating", sharPref?.getInt("Rating", 0) + 5)
             editor?.apply()
         }else if(text != null && text.toWords() == checker.toWords()){
             Toast.makeText(cont, "Не плохой результат", Toast.LENGTH_SHORT).show()
@@ -92,6 +115,7 @@ class MainActivity : AppCompatActivity() {
             if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.stop()!!
             val editor = sharPref?.edit()
             editor?.putInt("maxHearedLevel", num!!+1)
+            editor?.putInt("Rating", sharPref?.getInt("Rating", 0) + 3)
             editor?.apply()
         }else{
             return Toast.makeText(cont, "Попробуй снова", Toast.LENGTH_SHORT).show()
@@ -198,6 +222,9 @@ class MainActivity : AppCompatActivity() {
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 }
             }
+        }
+        if(level>max){
+            Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
         }
         sharPref.putInt("whatItLevel", level)
         sharPref.apply()

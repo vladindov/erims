@@ -134,7 +134,7 @@
             android:backgroundTint="@color/white"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_blocked_level"
-            android:onClick="playRepeat" />
+            android:onClick="toWhatItGame" />
     </LinearLayout>
 
     <LinearLayout

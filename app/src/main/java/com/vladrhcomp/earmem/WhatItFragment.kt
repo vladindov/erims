@@ -289,6 +289,7 @@ class WhatItFragment: Fragment() {
                         Toast.makeText(context, "Правильно!", Toast.LENGTH_SHORT).show()
                         (activity as MainActivity).back(view)
                         context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("maxWhatItLevel", level + 1)?.apply()
+                        context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("Rating", context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.getInt("Rating", 0)!! + 1)?.apply()
                     }
                     but3.setOnClickListener {
                         Toast.makeText(context, "Не правильно", Toast.LENGTH_SHORT).show()
@@ -315,6 +316,7 @@ class WhatItFragment: Fragment() {
                         Toast.makeText(context, "Правильно!", Toast.LENGTH_SHORT).show()
                         (activity as MainActivity).back(view)
                         context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("maxWhatItLevel", level + 1)?.apply()
+                        context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("Rating", context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.getInt("Rating", 0)!! + 1)?.apply()
                     }
                     but4.setOnClickListener {
                         Toast.makeText(context, "Не правильно", Toast.LENGTH_SHORT).show()
@@ -329,6 +331,7 @@ class WhatItFragment: Fragment() {
                         Toast.makeText(context, "Правильно!", Toast.LENGTH_SHORT).show()
                         (activity as MainActivity).back(view)
                         context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("maxWhatItLevel", level + 1)?.apply()
+                        context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("Rating", context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.getInt("Rating", 0)!! + 1)?.apply()
                     }
                     but2.setOnClickListener {
                         Toast.makeText(context, "Не правильно", Toast.LENGTH_SHORT).show()
@@ -355,6 +358,7 @@ class WhatItFragment: Fragment() {
                         Toast.makeText(context, "Правильно!", Toast.LENGTH_SHORT).show()
                         (activity as MainActivity).back(view)
                         context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("maxWhatItLevel", level + 1)?.apply()
+                        context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("Rating", context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.getInt("Rating", 0)!! + 1)?.apply()
                     }
                     but3.setOnClickListener {
                         Toast.makeText(context, "Не правильно", Toast.LENGTH_SHORT).show()
