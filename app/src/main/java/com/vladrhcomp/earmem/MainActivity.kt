@@ -1,9 +1,11 @@
 package com.vladrhcomp.earmem
 
+import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -12,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import be.tarsos.dsp.io.jvm.AudioDispatcherFactory
 import be.tarsos.dsp.onsets.OnsetHandler
 import be.tarsos.dsp.onsets.PercussionOnsetDetector
@@ -40,17 +43,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun hlopkiStart(view: View){
-        val mDispatcher = AudioDispatcherFactory.fromDefaultMicrophone(48000, 1024, 0)
-
-        val threshold = 8.0
-        val sensitivity = 20.0
-
-        val mPercussionDetector = PercussionOnsetDetector(22050.toFloat(), 1024,
-            OnsetHandler { time, salience -> Toast.makeText(this, "Clap!", Toast.LENGTH_SHORT).show() }, sensitivity, threshold
-        )
-
-        mDispatcher.addAudioProcessor(mPercussionDetector)
-        Thread(mDispatcher, "Audio Dispatcher").start()
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE), 121)
+        }else{
+            findViewById<Button>(R.id.butstat).isEnabled = true
+        }
     }
 
     fun toHlop(view: View){
@@ -270,5 +267,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode == 121 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            findViewById<Button>(R.id.butstat).isEnabled = true
+        }
     }
 }

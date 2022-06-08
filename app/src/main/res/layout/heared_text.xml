@@ -101,7 +101,7 @@
                 android:background="@drawable/edit_frame"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="Напишите услышанное"
+                android:hint="Напишите услышанное после прослушивания"
                 android:imeActionLabel="Проверить"
                 android:imeOptions="actionNext"
                 android:inputType="textMultiLine"
