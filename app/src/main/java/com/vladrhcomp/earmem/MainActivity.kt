@@ -6,22 +6,17 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.PorterDuff
-import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.util.Log
-import android.view.Menu
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentContainerView
-import be.tarsos.dsp.io.jvm.AudioDispatcherFactory
-import be.tarsos.dsp.onsets.OnsetHandler
-import be.tarsos.dsp.onsets.PercussionOnsetDetector
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 
@@ -37,6 +32,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> {
                     findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.GONE
+                    findViewById<FragmentContainerView>(R.id.mainFragment).visibility = View.VISIBLE
                     val set = item.icon
                     set.mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN)
                     item.icon = set
@@ -44,10 +40,13 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.navigation_dashboard -> {
-                    Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
+                    findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.VISIBLE
+                    findViewById<FragmentContainerView>(R.id.mainFragment).visibility = View.GONE
+                    supportFragmentManager.beginTransaction().replace(R.id.ratingContainer, ChatFragment.newInsance()).commit()
+                    return@setOnItemSelectedListener true
                 }
                 R.id.navigation_notifications -> {
-                    Toast.makeText(this,"Будет добавлено позже",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
                 }
                 R.id.navigation_stat -> {
                     findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.VISIBLE
@@ -263,6 +262,53 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").filter { !it.isWhitespace() }.toList()
+
+    /**
+     * Calculates the similarity (a number within 0 and 1) between two strings.
+     */
+    fun similarity(s1: String, s2: String): Double {
+        var longer = s1
+        var shorter = s2
+        if (s1.length < s2.length) { // longer should always have greater length
+            longer = s2
+            shorter = s1
+        }
+        val longerLength = longer.length
+        return if (longerLength == 0) {
+            1.0 /* both strings are zero length */
+        } else (longerLength - editDistance(longer, shorter)) / longerLength.toDouble()
+        /* // If you have Apache Commons Text, you can use it to calculate the edit distance:
+    LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
+    return (longerLength - levenshteinDistance.apply(longer, shorter)) / (double) longerLength; */
+    }
+
+    // Example implementation of the Levenshtein Edit Distance
+    // See http://rosettacode.org/wiki/Levenshtein_distance#Java
+    fun editDistance(s1: String, s2: String): Int {
+        var s1 = s1
+        var s2 = s2
+        s1 = s1.lowercase(Locale.getDefault())
+        s2 = s2.lowercase(Locale.getDefault())
+        val costs = IntArray(s2.length + 1)
+        for (i in 0..s1.length) {
+            var lastValue = i
+            for (j in 0..s2.length) {
+                if (i == 0) costs[j] = j else {
+                    if (j > 0) {
+                        var newValue = costs[j - 1]
+                        if (s1[i - 1] != s2[j - 1]) newValue = Math.min(
+                            Math.min(newValue, lastValue),
+                            costs[j]
+                        ) + 1
+                        costs[j - 1] = lastValue
+                        lastValue = newValue
+                    }
+                }
+            }
+            if (i > 0) costs[s2.length] = lastValue
+        }
+        return costs[s2.length]
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
