@@ -6,24 +6,31 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.text.color
 import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
+    // а этот отдельный плеер нужен, чтобы у нас телефон не забывал родительский элемент и можно было удобно управлять всеми аудио приложения
     var mMediaPlayer: MediaPlayer? = null
 
+    // Открываем главный экран и инициализируем нижнее меню
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen)
@@ -34,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                     findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.GONE
                     findViewById<FragmentContainerView>(R.id.mainFragment).visibility = View.VISIBLE
                     val set = item.icon
-                    set.mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN)
+                    set.mutate().setColorFilter(resources.getColor(R.color.white), PorterDuff.Mode.SRC_IN)
                     item.icon = set
                     supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
                     return@setOnItemSelectedListener true
@@ -51,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_stat -> {
                     findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.VISIBLE
                     val set = item.icon
-                    set.mutate().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN)
+                    set.mutate().setColorFilter(resources.getColor(R.color.white), PorterDuff.Mode.SRC_IN)
                     item.icon = set
                     supportFragmentManager.beginTransaction().replace(R.id.ratingContainer, RatingFragment.newInsance()).commit()
                     return@setOnItemSelectedListener true
@@ -63,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
     }
 
+    // проверка пермишенов и включение игры
     fun hlopkiStart(view: View){
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED){
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE), 121)
@@ -71,10 +79,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // будет открывать игру
     fun toHlop(view: View){
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, HlopkiFragment.newInsance()).commit()
     }
 
+    // чисто проверка текста и начисление баллов
     fun checkText(cont: Context, text: String){
         var checker = ""
         val sharPref = cont.getSharedPreferences("level", Context.MODE_PRIVATE)
@@ -100,27 +110,63 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if(text != null && text == checker){
+        if (num == 1){
+            val f4 =
+                "53 года назад, помесь такса с дворняжкой, помесь таксы с дворняжкой, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, столяр, Столяр, она спала, Она спала, Стружки, Стружках, Стружки, Стружках, заказчики Луки, Заказчики Луки".split(
+                    ", "
+                )
+            val f3 =
+                "53 года назад, помесь такса, помесь таксы, Помесь такса, Помесь таксы, заказчики Луки, Заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, Столяр, Спала, столяр, спала".split(
+                    ", "
+                )
+            val f21 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, столяр, спала".split(", ")
+            val f22 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, спала".split(", ")
+            val f1 = "53 года, Луки, Каштанка, Коштанка, каштанка, коштанка".split(", ")
+
+            val n = similar(text, num)
+
+            val et = findViewById<EditText>(R.id.editTextHeared)
+            val red = ForegroundColorSpan(Color.RED)
+            val spanSB = SpannableStringBuilder()
+            et.isClickable = false
+            for (s in text){
+                for (i in f4){
+                    for (ir in i){
+                        if (s == ir){
+                            spanSB.append("$s ")
+                        }
+                    }
+                }
+            }
+
+            Toast.makeText(cont, "Ты сделал на $n/4", Toast.LENGTH_SHORT).show()
+            val editor = sharPref.edit()
+            editor?.putInt("maxHearedLevel", num + 1)
+            editor?.putInt("Rating", sharPref.getInt("Rating", 0) + n)
+            editor?.apply()
+        }
+        else if(similarity(text, checker) >= 0.4){
             Toast.makeText(cont, "Молодец!", Toast.LENGTH_SHORT).show()
             supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
             if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.stop()!!
             val editor = sharPref?.edit()
             editor?.putInt("maxHearedLevel", num!!+1)
-            editor?.putInt("Rating", sharPref?.getInt("Rating", 0) + 5)
+            editor?.putInt("Rating", sharPref.getInt("Rating", 0) + 5)
             editor?.apply()
-        }else if(text != null && text.toWords() == checker.toWords()){
+        }else if(similarity(text, checker) >= 0.15){
             Toast.makeText(cont, "Не плохой результат", Toast.LENGTH_SHORT).show()
             supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
             if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.stop()!!
             val editor = sharPref?.edit()
             editor?.putInt("maxHearedLevel", num!!+1)
-            editor?.putInt("Rating", sharPref?.getInt("Rating", 0) + 3)
+            editor?.putInt("Rating", sharPref.getInt("Rating", 0) + 3)
             editor?.apply()
         }else{
             return Toast.makeText(cont, "Попробуй снова", Toast.LENGTH_SHORT).show()
         }
     }
 
+    // запускает нужное аудио
     fun Play(view: View){
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
         val num = sharPref.getInt("levelNum", 1)
@@ -161,6 +207,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // отклик программы на нажание перехода к уровню
     fun playRepeat(view: View){
         val numb = resources.getResourceName(view.id)
         val num = numb.substring(numb.lastIndexOf('/') + 1).replace("imageButtonHearedLevel", "").toInt()
@@ -178,7 +225,8 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
     }
 
-    fun back(view: View){
+    // возвращение к главному экрану
+    fun back(view: View) {
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
         if (mMediaPlayer?.isPlaying == true){
             mMediaPlayer?.stop()!!
@@ -186,10 +234,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // переход в "что это было"
     fun toWhatIt(view: View){
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, WhatItLevelsFragment.newInsance()).commit()
     }
 
+    // запуск нужного уровня
     fun toWhatItGame(view: View){
         val v = resources.getResourceName(view.id)
         val level = v.substring(v.lastIndexOf('/') + 1).replace("imageButtonWhatItLevel","").toInt()
@@ -229,6 +279,7 @@ class MainActivity : AppCompatActivity() {
         sharPref.apply()
     }
 
+    // говоришь никому всякое
     fun Say(view: View){
         if (mMediaPlayer != null) {
             mMediaPlayer!!.release()
@@ -253,19 +304,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // на всём, чего нет))
     fun GoodBye(view: View){
         Toast.makeText(this,"Будет добавлено позже",Toast.LENGTH_SHORT).show()
     }
 
+    // уход в "напишите услышанное"
     fun toPlay(view: View){
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, HearedLevelsFragment.newInsance()).commit()
     }
 
+    // очистка строки от людых символов
     fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").filter { !it.isWhitespace() }.toList()
 
-    /**
-     * Calculates the similarity (a number within 0 and 1) between two strings.
-     */
+    // Подсчёт схожести двух стрингов (от 0 до 1)
     fun similarity(s1: String, s2: String): Double {
         var longer = s1
         var shorter = s2
@@ -310,6 +362,62 @@ class MainActivity : AppCompatActivity() {
         return costs[s2.length]
     }
 
+    // схожеть 2
+    fun similar(s1: String, s2: Int): Int{
+        if (s2 == 1) {
+            var sum = 0
+            val f4 =
+                "53 года назад, помесь такса с дворняжкой, помесь таксы с дворняжкой, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, столяр, Столяр, она спала, Она спала, Стружки, Стружках, Стружки, Стружках, заказчики Луки, Заказчики Луки".split(
+                    ", "
+                )
+            val f3 =
+                "53 года назад, помесь такса, помесь таксы, Помесь такса, Помесь таксы, заказчики Луки, Заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, Столяр, Спала, столяр, спала".split(
+                    ", "
+                )
+            val f21 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, столяр, спала".split(", ")
+            val f22 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, спала".split(", ")
+            val f1 = "53 года, Луки, Каштанка, Коштанка, каштанка, коштанка".split(", ")
+
+            for (i in f4){
+                if (i in s1) sum++
+            }
+            if (sum >= 8){
+                return 4
+            } else sum = 0
+
+            for (i in f3){
+                if (i in s1) sum++
+            }
+            if (sum >= 7){
+                return 3
+            } else sum = 0
+
+            for (i in f21){
+                if (i in s1) sum++
+            }
+            if (sum >= 5){
+                return 2
+            } else sum = 0
+
+            for (i in f22){
+                if (i in s1) sum++
+            }
+            if (sum >= 4){
+                return 2
+            } else sum = 0
+
+            for (i in f1){
+                if (i in s1) sum++
+            }
+            if (sum >= 3){
+                return 1
+            } else sum = 0
+        }
+
+        return 0
+    }
+
+    // наговоил лишнего, а теперь принимем
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
@@ -331,6 +439,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // При сворачивании выключаем ненужное *надо знать life cycle
     override fun onStop() {
         super.onStop()
         if (mMediaPlayer != null) {
@@ -339,9 +448,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // при нажатии "назад" ничего не делаем
     override fun onBackPressed() {
     }
 
+    // тот самый чек пермишенов
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

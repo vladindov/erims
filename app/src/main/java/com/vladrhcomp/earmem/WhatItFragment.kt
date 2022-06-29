@@ -2,7 +2,6 @@ package com.vladrhcomp.earmem
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
