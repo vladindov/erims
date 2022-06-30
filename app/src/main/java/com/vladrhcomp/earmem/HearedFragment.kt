@@ -27,6 +27,10 @@ class HearedFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val edit = view.findViewById<EditText>(R.id.editTextHeared)
+        val sharPref = context?.getSharedPreferences("level", Context.MODE_PRIVATE)
+        val num = sharPref?.getInt("levelNum", 0)
+
+        view.findViewById<TextView>(R.id.textHearedLevel).text = "Уровень $num"
 
         view.findViewById<Button>(R.id.hearedButton).setOnClickListener {
             (activity as MainActivity).checkText(view.context, edit.text.toString())

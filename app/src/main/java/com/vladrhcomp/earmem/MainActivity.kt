@@ -11,12 +11,14 @@ import android.graphics.PorterDuff
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -112,32 +114,155 @@ class MainActivity : AppCompatActivity() {
 
         if (num == 1){
             val f4 =
-                "53 года назад, помесь такса с дворняжкой, помесь таксы с дворняжкой, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, столяр, Столяр, она спала, Она спала, Стружки, Стружках, Стружки, Стружках, заказчики Луки, Заказчики Луки".split(
-                    ", "
+                "53 года назад, помесь такса с дворняжкой, помесь таксы с дворняжкой, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, столяр, Столяр, она спала, Она спала, Стружки, Стружках, Стружки, Стружках, заказчики Луки, Заказчики Луки".replace(Regex("""[,]"""), "").split(
+                    " "
                 )
             val f3 =
-                "53 года назад, помесь такса, помесь таксы, Помесь такса, Помесь таксы, заказчики Луки, Заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, Столяр, Спала, столяр, спала".split(
-                    ", "
+                "53 года назад, помесь такса, помесь таксы, Помесь такса, Помесь таксы, заказчики Луки, Заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, Столяр, Спала, столяр, спала".replace(Regex("""[,]"""), "").split(
+                    " "
                 )
-            val f21 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, столяр, спала".split(", ")
-            val f22 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, спала".split(", ")
-            val f1 = "53 года, Луки, Каштанка, Коштанка, каштанка, коштанка".split(", ")
+            val f21 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, столяр, спала".replace(Regex("""[,]"""), "").split(" ")
+            val f1 = "53 года, Луки, Каштанка, Коштанка, каштанка, коштанка".replace(Regex("""[,]"""), "").split(" ")
 
             val n = similar(text, num)
 
-            val et = findViewById<EditText>(R.id.editTextHeared)
-            val red = ForegroundColorSpan(Color.RED)
+            val red = "#ff0000"
+            val green = "#008000"
+            val grey = "#7d7f7d"
             val spanSB = SpannableStringBuilder()
-            et.isClickable = false
-            for (s in text){
-                for (i in f4){
-                    for (ir in i){
-                        if (s == ir){
-                            spanSB.append("$s ")
+            var fiText = ""
+
+            for (i in text.toWords()){
+                when (n){
+                    4 -> {
+                        fiText += if (f4.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
+                            "<font color=$green>$i</font> "
+                        } else if (checker.toWords().indexOf(i) > -1) {
+                            "<font color=$grey>$i</font> "
+                        } else {
+                            fiText += "<font color=$red>$i</font> "
+                        }
+                    }
+                    3 -> {
+                        fiText += if (f3.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
+                            "<font color=$green>$i</font> "
+                        } else if (checker.toWords().indexOf(i) > -1) {
+                            "<font color=$grey>$i</font> "
+                        } else {
+                            fiText += "<font color=$red>$i</font> "
+                        }
+                    }
+                    2 -> {
+                        fiText += if (f21.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
+                            "<font color=$green>$i</font> "
+                        } else if (checker.toWords().indexOf(i) > -1) {
+                            "<font color=$grey>$i</font> "
+                        } else {
+                            fiText += "<font color=$red>$i</font> "
+                        }
+                    }
+                    1 -> {
+                        fiText += if (f1.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
+                            "<font color=$green>$i</font> "
+                        } else if (checker.toWords().indexOf(i) > -1) {
+                            "<font color=$grey>$i</font> "
+                        } else {
+                            fiText += "<font color=$red>$i</font> "
                         }
                     }
                 }
             }
+
+            findViewById<EditText>(R.id.editTextHeared).setText(Html.fromHtml(fiText))
+
+//            when(n){
+//                4 -> {
+//                    for (i in text.toWords()){
+//                        var k = 0
+//                        for (s in f4){
+//                            if (i == s){
+//                                k++
+//                                return
+//                            }
+//                        }
+//                        if (k > 0){
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                            return
+//                        } else {
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                        }
+//                    }
+//                }
+//                3 -> {
+//                    for (i in text.toWords()){
+//                        var k = 0
+//                        for (s in f3){
+//                            if (i == s){
+//                                k++
+//                                return
+//                            }
+//                        }
+//                        if (k > 0){
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                            return
+//                        } else {
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                        }
+//                    }
+//                }
+//                2 -> {
+//                    for (i in text.toWords()){
+//                        var k = 0
+//                        for (s in f21){
+//                            if (i == s){
+//                                k++
+//                                return
+//                            }
+//                        }
+//                        if (k > 0){
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                            return
+//                        } else {
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                        }
+//                    }
+//                }
+//                1 -> {
+//                    for (i in text.toWords()){
+//                        var k = 0
+//                        for (s in f1){
+//                            if (i == s){
+//                                k++
+//                                return
+//                            }
+//                        }
+//                        if (k > 0){
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                            return
+//                        } else {
+//                            spanSB.append("$i ")
+//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                        }
+//                    }
+//                }
+//            }
+
+//            for (s in text){
+//                for (i in f4){
+//                    for (ir in i){
+//                        if (s == ir){
+//                            spanSB.append("$s ")
+//                        }
+//                    }
+//                }
+//            }
 
             Toast.makeText(cont, "Ты сделал на $n/4", Toast.LENGTH_SHORT).show()
             val editor = sharPref.edit()
@@ -170,6 +295,7 @@ class MainActivity : AppCompatActivity() {
     fun Play(view: View){
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
         val num = sharPref.getInt("levelNum", 1)
+        val b = findViewById<ImageButton>(R.id.imageButtonHeared)
 
         if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.pause()!!
 
@@ -178,33 +304,34 @@ class MainActivity : AppCompatActivity() {
                 if (mMediaPlayer == null) {
                     mMediaPlayer = MediaPlayer.create(this, R.raw.uroven1_chisto)
                     mMediaPlayer!!.start()
-                } else mMediaPlayer!!.start()
+                }
             }
             2 -> {
                 if (mMediaPlayer == null) {
                     mMediaPlayer = MediaPlayer.create(this, R.raw.uroven2_chisto)
                     mMediaPlayer!!.start()
-                } else mMediaPlayer!!.start()
+                }
             }
             3 -> {
                 if (mMediaPlayer == null) {
                     mMediaPlayer = MediaPlayer.create(this, R.raw.uroven3_chisto)
                     mMediaPlayer!!.start()
-                } else mMediaPlayer!!.start()
+                }
             }
             4 -> {
                 if (mMediaPlayer == null) {
                     mMediaPlayer = MediaPlayer.create(this, R.raw.uroven4_chisto)
                     mMediaPlayer!!.start()
-                } else mMediaPlayer!!.start()
+                }
             }
             5 -> {
                 if (mMediaPlayer == null) {
                     mMediaPlayer = MediaPlayer.create(this, R.raw.uroven5_chisto)
                     mMediaPlayer!!.start()
-                } else mMediaPlayer!!.start()
+                }
             }
         }
+        b.visibility = View.INVISIBLE
     }
 
     // отклик программы на нажание перехода к уровню
@@ -314,8 +441,8 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, HearedLevelsFragment.newInsance()).commit()
     }
 
-    // очистка строки от людых символов
-    fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").filter { !it.isWhitespace() }.toList()
+    // очистка строки от любых символов
+    fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").split(" ")
 
     // Подсчёт схожести двух стрингов (от 0 до 1)
     fun similarity(s1: String, s2: String): Double {
