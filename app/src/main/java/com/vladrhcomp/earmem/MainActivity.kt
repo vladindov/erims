@@ -87,207 +87,148 @@ class MainActivity : AppCompatActivity() {
     }
 
     // чисто проверка текста и начисление баллов
-    fun checkText(cont: Context, text: String){
+    fun checkText(cont: Context, text: String) {
         var checker = ""
+        var m4 = ""
+        var m3 = ""
+        var m2 = ""
+        var m1 = ""
         val sharPref = cont.getSharedPreferences("level", Context.MODE_PRIVATE)
         val num = sharPref?.getInt("levelNum", 0)
 
-        when(num){
+        when (num) {
             1 -> {
-                checker = "53 года назад. Услыхав свое имя, помесь такса с дворняжкой вышла из-под верстака, где она спала на стружках, сладко потянулась и побежала за хозяином. Заказчики Луки Александрыча жили ужасно далеко, так что, прежде чем дойти до каждого из них, столяр должен был по нескольку раз заходить в трактир и подкрепляться. Каштанка помнила, что по дороге она вела себя крайне неприлично"
+                checker =
+                    "53 года назад. Услыхав свое имя, помесь такса с дворняжкой вышла из-под верстака, где она спала на стружках, сладко потянулась и побежала за хозяином. Заказчики Луки Александрыча жили ужасно далеко, так что, прежде чем дойти до каждого из них, столяр должен был по нескольку раз заходить в трактир и подкрепляться. Каштанка помнила, что по дороге она вела себя крайне неприлично"
+                m4 =
+                    "53 года назад, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, Трактир, Столяр, Она спала, Стружки, Стружках, Заказчики Луки".uppercase()
+                m3 =
+                    "53 года назад, Помесь такса, Помесь таксы, Заказчики Луки, Каштанка, Коштанка, Трактир, Столяр, Спала".uppercase()
+                m2 = "53 года назад, заказчики Луки, Каштанка, Коштанка, столяр, спала".uppercase()
+                m1 = "53 года, Луки, Каштанка, Коштанка".uppercase()
             }
             2 -> {
-                checker = "Тема свободного человека – главная тема всего произведения, но в легенде о Данко она рассматривается в неожиданном ракурсе. Для писателя понятие «свобода» связано с понятием «правда» и «подвиг». Горького интересует не «свобода» «от чего-либо», а свобода «во имя». Горький использует жанр литературной легенды, потому что он, как нельзя лучше, подходил для его замысла: кратко, взволновано, ярко воспеть все лучшее, что может быть в человеке. Более всего писатель негодовал против эгоизма, корыстолюбия, самолюбования и гордыни."
+                checker =
+                    "Тема свободного человека – главная тема всего произведения, но в легенде о Данко она рассматривается в неожиданном ракурсе, Для писателя понятие \"свобода\" связано с понятием \"правда\" и \"подвиг\", Горького интересует не \"свобода\" \"от чего-либо\", а свобода \"во имя\". Горький использует жанр литературной легенды, потому что он, как нельзя лучше, подходил для его замысла: кратко, взволновано, ярко воспеть все лучшее, что может быть в человеке. Более всего писатель негодовал против эгоизма, корыстолюбия, самолюбования и гордыни"
+                m4 =
+                    "свободный человек, главная тема произведения, Данко, неожиданный ракурс, свобода - подвиг и правда, \"свобода во имя\" Горький , жанр литературная легенда, кратко, ярко и взволнованно воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
+                m3 =
+                    "свободный человек, главная тема произведения, Данко, свобода - подвиг и правда, \"свобода во имя\" Горький, жанр литературная легенда воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
+                m2 = "свободный человек, тема произведения  свобода - подвиг и правда, \"свобода во имя\" Горький, воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
+                m1 = "свободный человек, \"свобода во имя\" Горький, воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
             }
             3 -> {
-                checker = "Как раз в то время, когда почтальон с письмом поднимался по лестнице, у Чука с Геком был бой. Короче говоря, они просто выли и дрались. Из-за чего началась эта драка, я уже позабыл. Но помнится мне, что или Чук стащил у Гека пустую спичечную коробку, или, наоборот, Гек стянул у Чука жестянку из-под ваксы. \n" +
-                        "Только что оба эти брата, стукнув по разу друг друга кулаками, собирались стукнуть по второму, как загремел звонок, и они с тревогой переглянулись. Они подумали, что пришла их мама! А у этой мамы был странный характер. Она не ругалась за драку, не кричала, а просто разводила драчунов по разным комнатам и целый час, а то и два не позволяла им играть вместе. А в одном часе – тик да так – целых шестьдесят минут. А в двух часах и того больше."
+                checker =
+                    "Как раз в то время, когда почтальон с письмом поднимался по лестнице, у Чука с Геком был бой. Короче говоря, они просто выли и дрались. Из-за чего началась эта драка, я уже позабыл. Но помнится мне, что или Чук стащил у Гека пустую спичечную коробку, или, наоборот, Гек стянул у Чука жестянку из-под ваксы. \n" +
+                            "Только что оба эти брата, стукнув по разу друг друга кулаками, собирались стукнуть по второму, как загремел звонок, и они с тревогой переглянулись. Они подумали, что пришла их мама! А у этой мамы был странный характер. Она не ругалась за драку, не кричала, а просто разводила драчунов по разным комнатам и целый час, а то и два не позволяла им играть вместе. А в одном часе – тик да так – целых шестьдесят минут. А в двух часах и того больше"
+                m4 =
+                    "Почтальон с письмами, поднимался, лестница, у Чука с Геком был бой, дрались и выли, Чук спичечную коробку или Гек жестяную банку, стукнули по разу, стукнуть второй, с тревогой переглянулись, мама, характер странный, не ругалась, разводила по комнатам и не позволяла, играть вместе, час - шестьдесят минут".uppercase()
+                m3 =
+                    "Почтальон с письмами, поднимался, лестница, у Чука с Геком был бой, дрались, стащил спичечную коробку или стянул жестяную банку, стукнули по разу, второй, переглянулись, мама, характер странный, не ругалась, разводила по комнатам и не позволяла, играть вместе".uppercase()
+                m2 = "Почтальон, письма, лестница, бой, стащил спичечную коробку или стянул жестяную банку, стукнули по разу, второй, мама, характер странный, разводила по комнатам, играть вместе".uppercase()
+                m1 = "Почтальон, лестница, бой, спичечная коробка, стукнуть, мама, характер, играть вместе".uppercase()
             }
             4 -> {
-                checker = "Во время моих посещений нью-йоркского рынка — мой отец и я в это время имели целый ряд небольших магазинов в Виргинии. Капитан Картер владел маленьким, но красивым коттеджем, расположенным на возвышенности, с хорошим видом на реку. Во время одного из моих посещений я заметил, что он был очень занят писанием.\n" +
-                        "Тогда же он сказал мне, что в случае какого-нибудь с ним несчастья, он хотел бы, чтоб я распорядился его имуществом; он дал мне ключ от шкафа в его кабинете, где я найду завещание и некоторые указания, которыми он просил меня выполнить с точностью."
+                checker =
+                    "Во время моих посещений нью-йоркского рынка — мой отец и я в это время имели целый ряд небольших магазинов в Виргинии. Капитан Картер владел маленьким, но красивым коттеджем, расположенным на возвышенности, с хорошим видом на реку. Во время одного из моих посещений я заметил, что он был очень занят писанием.\n" +
+                            "Тогда же он сказал мне, что в случае какого-нибудь с ним несчастья, он хотел бы, чтоб я распорядился его имуществом; он дал мне ключ от шкафа в его кабинете, где я найду завещание и некоторые указания, которыми он просил меня выполнить с точностью."
+                m4 =
+                    "Нью-Йоркский Рынок, я и мой отец, магазины, капитан, маленький, красивый коттедж, занят писанием, несчастье, распорядился, имущество, ключ от шкафа, завещание, указания, выполнить с точностью".uppercase()
+                m3 =
+                    "Нью-Йоркский Рынок, я и мой отец, магазины, маленький, красивый коттедж, занят писанием, несчастье, распорядился, имущество, ключ от шкафа, завещание".uppercase()
+                m2 = "Рынок, я и мой отец, магазины, коттедж, занят писанием, несчастье, имущество, ключ от шкафа, завещание".uppercase()
+                m1 = "Рынок, магазины, коттедж, занят писанием, имущество, завещание".uppercase()
             }
             5 -> {
-                checker = "Настасья сиротой росла, не привыкла к такому богатству, да и не шибко любительница была моду выводить. С первых годов, как жили со Степаном, надевывала, конечно, из этой шкатулки. Только не к душе ей пришлось. Наденет кольцо... Ровно как раз впору. Но закованный палец-то, в конце нали посинеет. Серьги навесит - хуже того. Уши так оттянет, что мочки распухнут. А на руки взять - не тяжелее тех, какие Настасья всегда носила."
+                checker =
+                    "Настасья сиротой росла, не привыкла к такому богатству, да и не шибко любительница была моду выводить, С первых годов, как жили со Степаном, надевывала, конечно, из этой шкатулки, Только не к душе ей пришлось, Наденет кольцо, Ровно как раз впору, Но закованный палец-то, в конце нали посинеет, Серьги навесит - хуже того, Уши так оттянет, что мочки распухнут, А на руки взять - не тяжелее тех, какие Настасья всегда носила"
+                m4 =
+                    "Сирота, росла, не привыкла, богатство, мода, Степан, шкатулка, не к душе, кольцо, впору, закованный, серьги, уши, мочки, распухнут, не тяжелее, Настасья, носила".uppercase()
+                m3 =
+                    "Сирота, росла, не привыкла, богатство, мода, Степан, шкатулка, кольцо, впору, закованный, серьги, уши, мочки, Настасья".uppercase()
+                m2 = "Сирота, росла, богатство, мода, шкатулка, кольцо, впору, закованный, серьги, уши, мочки, Настасья".uppercase()
+                m1 = "Сирота, богатство, мода, шкатулка, кольцо, серьги, уши, Настасья".uppercase()
             }
         }
 
-        if (num == 1){
-            val f4 =
-                "53 года назад, помесь такса с дворняжкой, помесь таксы с дворняжкой, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, столяр, Столяр, она спала, Она спала, Стружки, Стружках, Стружки, Стружках, заказчики Луки, Заказчики Луки".replace(Regex("""[,]"""), "").split(
-                    " "
-                )
-            val f3 =
-                "53 года назад, помесь такса, помесь таксы, Помесь такса, Помесь таксы, заказчики Луки, Заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, Столяр, Спала, столяр, спала".replace(Regex("""[,]"""), "").split(
-                    " "
-                )
-            val f21 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, столяр, спала".replace(Regex("""[,]"""), "").split(" ")
-            val f1 = "53 года, Луки, Каштанка, Коштанка, каштанка, коштанка".replace(Regex("""[,]"""), "").split(" ")
+        val f4 = m4.replace(Regex("""[,]"""), "").split(" ")
+        val f3 = m3.replace(Regex("""[,]"""), "").split(" ")
+        val f2 = m2.replace(Regex("""[,]"""), "").split(" ")
+        val f1 = m1.replace(Regex("""[,]"""), "").split(" ")
 
-            val n = similar(text, num)
+        val s4 = m4.split(", ")
+        val s3 = m3.split(", ")
+        val s2 = m2.split(", ")
+        val s1 = m1.split(", ")
 
-            val red = "#ff0000"
-            val green = "#008000"
-            val grey = "#7d7f7d"
-            val spanSB = SpannableStringBuilder()
-            var fiText = ""
+        var n = 7
+        when (num){
+            1 -> n = similar(text, s1, 3, s2, 5, s3, 7, s4, 8)
+            2 -> n = similar(text, s1, 4, s2, 6, s3, 7, s4, 10)
+            3 -> n = similar(text, s1, 8, s2, 11, s3, 14, s4, 15)
+            4 -> n = similar(text, s1, 6, s2, 9, s3, 11, s4, 14)
+            5 -> n = similar(text, s1, 8, s2, 12, s3, 14, s4, 18)
+        }
 
-            for (i in text.toWords()){
-                when (n){
-                    4 -> {
-                        fiText += if (f4.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
-                            "<font color=$green>$i</font> "
-                        } else if (checker.toWords().indexOf(i) > -1) {
-                            "<font color=$grey>$i</font> "
-                        } else {
-                            fiText += "<font color=$red>$i</font> "
-                        }
+        val red = "#ff0000"
+        val green = "#008000"
+        val grey = "#7d7f7d"
+        var fiText = ""
+
+        for (i in text.uppercase().toWords()){
+            when (n){
+                4 -> {
+                    fiText += if (f4.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                        "<font color=$green>$i</font> "
+                    } else if (checker.toWords().indexOf(i) > -1) {
+                        "<font color=$grey>$i</font> "
+                    } else {
+                        fiText += "<font color=$red>$i</font> "
                     }
-                    3 -> {
-                        fiText += if (f3.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
-                            "<font color=$green>$i</font> "
-                        } else if (checker.toWords().indexOf(i) > -1) {
-                            "<font color=$grey>$i</font> "
-                        } else {
-                            fiText += "<font color=$red>$i</font> "
-                        }
+                }
+                3 -> {
+                    fiText += if (f3.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                        "<font color=$green>$i</font> "
+                    } else if (checker.toWords().indexOf(i) > -1) {
+                        "<font color=$grey>$i</font> "
+                    } else {
+                        fiText += "<font color=$red>$i</font> "
                     }
-                    2 -> {
-                        fiText += if (f21.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
-                            "<font color=$green>$i</font> "
-                        } else if (checker.toWords().indexOf(i) > -1) {
-                            "<font color=$grey>$i</font> "
-                        } else {
-                            fiText += "<font color=$red>$i</font> "
-                        }
+                }
+                2 -> {
+                    fiText += if (f2.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                        "<font color=$green>$i</font> "
+                    } else if (checker.toWords().indexOf(i) > -1) {
+                        "<font color=$grey>$i</font> "
+                    } else {
+                        fiText += "<font color=$red>$i</font> "
                     }
-                    1 -> {
-                        fiText += if (f1.indexOf(i) > -1 && checker.toWords().indexOf(i) > -1){
-                            "<font color=$green>$i</font> "
-                        } else if (checker.toWords().indexOf(i) > -1) {
-                            "<font color=$grey>$i</font> "
-                        } else {
-                            fiText += "<font color=$red>$i</font> "
-                        }
+                }
+                1 -> {
+                    fiText += if (f1.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                        "<font color=$green>$i</font> "
+                    } else if (checker.toWords().indexOf(i) > -1) {
+                        "<font color=$grey>$i</font> "
+                    } else {
+                        fiText += "<font color=$red>$i</font> "
                     }
                 }
             }
-
-            findViewById<EditText>(R.id.editTextHeared).setText(Html.fromHtml(fiText))
-
-//            when(n){
-//                4 -> {
-//                    for (i in text.toWords()){
-//                        var k = 0
-//                        for (s in f4){
-//                            if (i == s){
-//                                k++
-//                                return
-//                            }
-//                        }
-//                        if (k > 0){
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                            return
-//                        } else {
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                        }
-//                    }
-//                }
-//                3 -> {
-//                    for (i in text.toWords()){
-//                        var k = 0
-//                        for (s in f3){
-//                            if (i == s){
-//                                k++
-//                                return
-//                            }
-//                        }
-//                        if (k > 0){
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                            return
-//                        } else {
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                        }
-//                    }
-//                }
-//                2 -> {
-//                    for (i in text.toWords()){
-//                        var k = 0
-//                        for (s in f21){
-//                            if (i == s){
-//                                k++
-//                                return
-//                            }
-//                        }
-//                        if (k > 0){
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                            return
-//                        } else {
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                        }
-//                    }
-//                }
-//                1 -> {
-//                    for (i in text.toWords()){
-//                        var k = 0
-//                        for (s in f1){
-//                            if (i == s){
-//                                k++
-//                                return
-//                            }
-//                        }
-//                        if (k > 0){
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(green, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                            return
-//                        } else {
-//                            spanSB.append("$i ")
-//                            spanSB.setSpan(grey, spanSB.length - 1 - i.length,spanSB.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//                        }
-//                    }
-//                }
-//            }
-
-//            for (s in text){
-//                for (i in f4){
-//                    for (ir in i){
-//                        if (s == ir){
-//                            spanSB.append("$s ")
-//                        }
-//                    }
-//                }
-//            }
-
-            Toast.makeText(cont, "Ты сделал на $n/4", Toast.LENGTH_SHORT).show()
-            val editor = sharPref.edit()
-            editor?.putInt("maxHearedLevel", num + 1)
-            editor?.putInt("Rating", sharPref.getInt("Rating", 0) + n)
-            editor?.apply()
         }
-        else if(similarity(text, checker) >= 0.4){
-            Toast.makeText(cont, "Молодец!", Toast.LENGTH_SHORT).show()
-            supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
-            if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.stop()!!
-            val editor = sharPref?.edit()
-            editor?.putInt("maxHearedLevel", num!!+1)
-            editor?.putInt("Rating", sharPref.getInt("Rating", 0) + 5)
-            editor?.apply()
-        }else if(similarity(text, checker) >= 0.15){
-            Toast.makeText(cont, "Не плохой результат", Toast.LENGTH_SHORT).show()
-            supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
-            if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.stop()!!
-            val editor = sharPref?.edit()
-            editor?.putInt("maxHearedLevel", num!!+1)
-            editor?.putInt("Rating", sharPref.getInt("Rating", 0) + 3)
-            editor?.apply()
-        }else{
-            return Toast.makeText(cont, "Попробуй снова", Toast.LENGTH_SHORT).show()
+
+        findViewById<EditText>(R.id.editTextHeared).setText(Html.fromHtml(fiText))
+
+        Toast.makeText(cont, "Ты сделал на $n/4", Toast.LENGTH_SHORT).show()
+        val editor = sharPref.edit()
+        if (num != null) {
+            editor?.putInt("maxHearedLevel", num + 1)
+        }
+        editor?.putInt("Rating", sharPref.getInt("Rating", 0) + n)
+        editor?.apply()
+
+        findViewById<Button>(R.id.hearedButton).text = "На главную"
+        findViewById<Button>(R.id.hearedButton).setOnClickListener {
+            back(it)
         }
     }
 
@@ -490,58 +431,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     // схожеть 2
-    fun similar(s1: String, s2: Int): Int{
-        if (s2 == 1) {
-            var sum = 0
-            val f4 =
-                "53 года назад, помесь такса с дворняжкой, помесь таксы с дворняжкой, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, столяр, Столяр, она спала, Она спала, Стружки, Стружках, Стружки, Стружках, заказчики Луки, Заказчики Луки".split(
-                    ", "
-                )
-            val f3 =
-                "53 года назад, помесь такса, помесь таксы, Помесь такса, Помесь таксы, заказчики Луки, Заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, трактир, Трактир, Столяр, Спала, столяр, спала".split(
-                    ", "
-                )
-            val f21 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, столяр, спала".split(", ")
-            val f22 = "53 года назад, заказчики Луки, Каштанка, Коштанка, каштанка, коштанка, спала".split(", ")
-            val f1 = "53 года, Луки, Каштанка, Коштанка, каштанка, коштанка".split(", ")
+    fun similar(text: String, f1: List<String>, fr1: Int, f2: List<String>, fr2: Int, f3: List<String>, fr3: Int, f4: List<String>, fr4: Int): Int{
+        var sum = 0
 
-            for (i in f4){
-                if (i in s1) sum++
-            }
-            if (sum >= 8){
-                return 4
-            } else sum = 0
-
-            for (i in f3){
-                if (i in s1) sum++
-            }
-            if (sum >= 7){
-                return 3
-            } else sum = 0
-
-            for (i in f21){
-                if (i in s1) sum++
-            }
-            if (sum >= 5){
-                return 2
-            } else sum = 0
-
-            for (i in f22){
-                if (i in s1) sum++
-            }
-            if (sum >= 4){
-                return 2
-            } else sum = 0
-
-            for (i in f1){
-                if (i in s1) sum++
-            }
-            if (sum >= 3){
-                return 1
-            } else sum = 0
+        for (i in f4){
+            if (i in text) sum++
         }
+        if (sum >= fr4){
+            return 4
+        } else sum = 0
 
-        return 0
+        for (i in f3){
+            if (i in text) sum++
+        }
+        if (sum >= fr3){
+            return 3
+        } else sum = 0
+
+        for (i in f2){
+            if (i in text) sum++
+        }
+        if (sum >= fr2){
+            return 2
+        } else sum = 0
+
+        for (i in f1){
+            if (i in text) sum++
+        }
+        if (sum >= fr1){
+            return 1
+        } else return 0
     }
 
     // наговоил лишнего, а теперь принимем
