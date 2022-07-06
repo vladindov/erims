@@ -385,82 +385,75 @@ class MainActivity : AppCompatActivity() {
     // очистка строки от любых символов
     fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").split(" ")
 
-    // Подсчёт схожести двух стрингов (от 0 до 1)
-    fun similarity(s1: String, s2: String): Double {
-        var longer = s1
-        var shorter = s2
-        if (s1.length < s2.length) { // longer should always have greater length
-            longer = s2
-            shorter = s1
-        }
-        val longerLength = longer.length
-        return if (longerLength == 0) {
-            1.0 /* both strings are zero length */
-        } else (longerLength - editDistance(longer, shorter)) / longerLength.toDouble()
-        /* // If you have Apache Commons Text, you can use it to calculate the edit distance:
-    LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
-    return (longerLength - levenshteinDistance.apply(longer, shorter)) / (double) longerLength; */
-    }
+    // схожеть для игры "Напиши услышанное"
+//    fun similar(text: String, f1: List<String>, fr1: Int, f2: List<String>, fr2: Int, f3: List<String>, fr3: Int, f4: List<String>, fr4: Int): Int{
+//        var sum = 0
+//
+//        for (i in f4){
+//            if (i in text) sum++
+//        }
+//        if (sum >= fr4){
+//            return 4
+//        } else sum = 0
+//
+//        for (i in f3){
+//            if (i in text) sum++
+//        }
+//        if (sum >= fr3){
+//            return 3
+//        } else sum = 0
+//
+//        for (i in f2){
+//            if (i in text) sum++
+//        }
+//        if (sum >= fr2){
+//            return 2
+//        } else sum = 0
+//
+//        for (i in f1){
+//            if (i in text) sum++
+//        }
+//        if (sum >= fr1){
+//            return 1
+//        } else return 0
+//    }
 
-    // Example implementation of the Levenshtein Edit Distance
-    // See http://rosettacode.org/wiki/Levenshtein_distance#Java
-    fun editDistance(s1: String, s2: String): Int {
-        var s1 = s1
-        var s2 = s2
-        s1 = s1.lowercase(Locale.getDefault())
-        s2 = s2.lowercase(Locale.getDefault())
-        val costs = IntArray(s2.length + 1)
-        for (i in 0..s1.length) {
-            var lastValue = i
-            for (j in 0..s2.length) {
-                if (i == 0) costs[j] = j else {
-                    if (j > 0) {
-                        var newValue = costs[j - 1]
-                        if (s1[i - 1] != s2[j - 1]) newValue = Math.min(
-                            Math.min(newValue, lastValue),
-                            costs[j]
-                        ) + 1
-                        costs[j - 1] = lastValue
-                        lastValue = newValue
-                    }
-                }
+    fun similar(text: String, num: Int): Int{
+        lateinit var frases: List<String>
+        lateinit var words: List<String>
+
+        when (num){
+            1 -> {
+                frases = "".uppercase().split(", ")
+                words = "".uppercase().split(", ")
             }
-            if (i > 0) costs[s2.length] = lastValue
+            2 -> {
+                frases = "".uppercase().split(", ")
+                words = "".uppercase().split(", ")
+            }
+            3 -> {
+                frases = "".uppercase().split(", ")
+                words = "".uppercase().split(", ")
+            }
+            4 -> {
+                frases = "".uppercase().split(", ")
+                words = "".uppercase().split(", ")
+            }
+            5 -> {
+                frases = "".uppercase().split(", ")
+                words = "".uppercase().split(", ")
+            }
         }
-        return costs[s2.length]
-    }
 
-    // схожеть 2
-    fun similar(text: String, f1: List<String>, fr1: Int, f2: List<String>, fr2: Int, f3: List<String>, fr3: Int, f4: List<String>, fr4: Int): Int{
-        var sum = 0
+        val w = text.trim().replace(Regex("""[$,.;:'"-]"""), "").uppercase()
 
-        for (i in f4){
-            if (i in text) sum++
+        for (s in frases){
+            if (s in w){
+                w.replace("$s", "").trim()
+            }
         }
-        if (sum >= fr4){
-            return 4
-        } else sum = 0
 
-        for (i in f3){
-            if (i in text) sum++
-        }
-        if (sum >= fr3){
-            return 3
-        } else sum = 0
-
-        for (i in f2){
-            if (i in text) sum++
-        }
-        if (sum >= fr2){
-            return 2
-        } else sum = 0
-
-        for (i in f1){
-            if (i in text) sum++
-        }
-        if (sum >= fr1){
-            return 1
-        } else return 0
+        return 0
     }
 
     // наговоил лишнего, а теперь принимем
@@ -483,6 +476,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun clearAllData(view: View){
+        val ed = getSharedPreferences("level", Context.MODE_PRIVATE).edit()
+        ed.clear()
+        ed.apply()
     }
 
     // При сворачивании выключаем ненужное *надо знать life cycle

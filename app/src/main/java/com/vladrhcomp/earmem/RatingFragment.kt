@@ -26,18 +26,39 @@ class RatingFragment: Fragment() {
         val image = view.findViewById<ImageView>(R.id.ratingImage)
         val text = view.findViewById<TextView>(R.id.ratingText)
         val rating = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getInt("Rating", 0)
-        val days = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0")
+        val days = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0 11,11")
 
         val edit = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).edit()
         val sdf = SimpleDateFormat("EEEE")
         val d = Date()
         val dayOfTheWeek: String = sdf.format(d)
+        val nowDate = SimpleDateFormat("DD,MM").format(Date())
 
-        if(dayOfTheWeek == "Monday"){
-            edit.putString("Days", "0 0 0 0 0")
+        when (dayOfTheWeek){
+            "Monday" -> {
+                edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
+            }
+            "Tuesday" -> {
+                edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
+            }
+            "Wednesday" -> {
+                edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
+            }
+            "Thursday" -> {
+                edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
+            }
+            "Friday" -> {
+                edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
+            }
+            "Saturday" -> {
+                edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
+            }
+            "Sunday" -> {
+                edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
+            }
         }
 
-        text.text = rating.toString() + "/10 очков"
+        text.text = "$rating/10 очков"
         when(rating){
             0 -> {
                 image.setImageResource(R.drawable.ic__0)
@@ -100,12 +121,16 @@ class RatingFragment: Fragment() {
                 }
             }
 
-            edit.putString("Days", Day[0] + " " + Day[1] + " " + Day[2] + " " + Day[3] + " " + Day[4] + " " + Day[5] + " " + Day[6])
+            edit.putString("Days", Day[0] + " " + Day[1] + " " + Day[2] + " " + Day[3] + " " + Day[4] + " " + Day[5] + " " + Day[6] + " " + Day[7])
         }
         edit.apply()
 
-        val closedDays = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0")
+        val closedDays = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0 11,11")
         val all = closedDays!!.split(" ").toTypedArray()
+
+        if (days!!.split(" ").toTypedArray()[7] != all[7]){
+            edit.putInt("Rating", 0)
+        }
 
         if(all[0] == "1"){
             view.findViewById<ImageView>(R.id.imageMon).visibility = View.VISIBLE
