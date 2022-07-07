@@ -385,42 +385,11 @@ class MainActivity : AppCompatActivity() {
     // очистка строки от любых символов
     fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").split(" ")
 
-    // схожеть для игры "Напиши услышанное"
-//    fun similar(text: String, f1: List<String>, fr1: Int, f2: List<String>, fr2: Int, f3: List<String>, fr3: Int, f4: List<String>, fr4: Int): Int{
-//        var sum = 0
-//
-//        for (i in f4){
-//            if (i in text) sum++
-//        }
-//        if (sum >= fr4){
-//            return 4
-//        } else sum = 0
-//
-//        for (i in f3){
-//            if (i in text) sum++
-//        }
-//        if (sum >= fr3){
-//            return 3
-//        } else sum = 0
-//
-//        for (i in f2){
-//            if (i in text) sum++
-//        }
-//        if (sum >= fr2){
-//            return 2
-//        } else sum = 0
-//
-//        for (i in f1){
-//            if (i in text) sum++
-//        }
-//        if (sum >= fr1){
-//            return 1
-//        } else return 0
-//    }
-
     fun similar(text: String, num: Int): Int{
         lateinit var frases: List<String>
         lateinit var words: List<String>
+
+        var count = 0
 
         when (num){
             1 -> {
@@ -447,13 +416,24 @@ class MainActivity : AppCompatActivity() {
 
         val w = text.trim().replace(Regex("""[$,.;:'"-]"""), "").uppercase()
 
-        for (s in frases){
-            if (s in w){
-                w.replace("$s", "").trim()
-            }
-        }
+//        for (s in frases){
+//            when (s){
+//                "Сладко потянулась и побежала за хозяином".uppercase() -> {
+//                    if (s in w){
+//                        w.replace("$s", "").trim()
+//                        count += 5
+//                    }
+//                }
+//                "Заказчики Луки Александрыча".uppercase(), "Заказчики Луки Александровича".uppercase(), "53 года назад".uppercase(), "Прежде чем дойти".uppercase(), "Столяр заходить в трактир".uppercase(), "столяр должен был заходить в трактир и подкрепляться".uppercase() -> {
+//                    if (s in w){
+//                        w.replace("$s", "").trim()
+//                        count += 4
+//                    }
+//                }
+//            }
+//        }
 
-        return 0
+        return count
     }
 
     // наговоил лишнего, а теперь принимем
