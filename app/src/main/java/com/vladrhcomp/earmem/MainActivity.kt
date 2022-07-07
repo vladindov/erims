@@ -386,31 +386,66 @@ class MainActivity : AppCompatActivity() {
     fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").split(" ")
 
     fun similar(text: String, num: Int): Int{
-        lateinit var frases: List<String>
-        lateinit var words: List<String>
+        lateinit var fr5: List<String>
+        lateinit var fr4: List<String>
+        lateinit var fr3: List<String>
+        lateinit var fr2: List<String>
+        lateinit var wr3: List<String>
+        lateinit var wr2: List<String>
+        lateinit var wr1: List<String>
 
         var count = 0
 
         when (num){
             1 -> {
-                frases = "".uppercase().split(", ")
-                words = "".uppercase().split(", ")
+                fr5 = "Сладко потянулась и побежала за хозяином".uppercase().split(", ")
+                fr4 = "53 года назад, Заказчики Луки Александрыча, Прежде чем дойти, Столяр заходить в трактир, столяр должен был заходить в трактир и подкрепляться".uppercase().split(", ")
+                fr3 = "Сладко потянулась, Спала на стружках, Вела крайне неприлично".uppercase().split(", ")
+                fr2 = "Побежала за хозяином, Каштанка помнишь".uppercase().split(", ")
+
+                wr3 = "такса дворняжкой заказчики".uppercase().split(" ")
+                wr2 = "53 трактир столяр".uppercase().split(" ")
+                wr1 = "года Луки Каштанка спала назад помесь она стружки сладко".uppercase().split(" ")
             }
             2 -> {
-                frases = "".uppercase().split(", ")
-                words = "".uppercase().split(", ")
+                fr5 = "".uppercase().split(", ")
+                fr4 = "".uppercase().split(", ")
+                fr3 = "".uppercase().split(", ")
+                fr2 = "".uppercase().split(", ")
+
+                wr3 = "".uppercase().split(" ")
+                wr2 = "".uppercase().split(" ")
+                wr1 = "".uppercase().split(" ")
             }
             3 -> {
-                frases = "".uppercase().split(", ")
-                words = "".uppercase().split(", ")
+                fr5 = "".uppercase().split(", ")
+                fr4 = "".uppercase().split(", ")
+                fr3 = "".uppercase().split(", ")
+                fr2 = "".uppercase().split(", ")
+
+                wr3 = "".uppercase().split(" ")
+                wr2 = "".uppercase().split(" ")
+                wr1 = "".uppercase().split(" ")
             }
             4 -> {
-                frases = "".uppercase().split(", ")
-                words = "".uppercase().split(", ")
+                fr5 = "".uppercase().split(", ")
+                fr4 = "".uppercase().split(", ")
+                fr3 = "".uppercase().split(", ")
+                fr2 = "".uppercase().split(", ")
+
+                wr3 = "".uppercase().split(" ")
+                wr2 = "".uppercase().split(" ")
+                wr1 = "".uppercase().split(" ")
             }
             5 -> {
-                frases = "".uppercase().split(", ")
-                words = "".uppercase().split(", ")
+                fr5 = "".uppercase().split(", ")
+                fr4 = "".uppercase().split(", ")
+                fr3 = "".uppercase().split(", ")
+                fr2 = "".uppercase().split(", ")
+
+                wr3 = "".uppercase().split(" ")
+                wr2 = "".uppercase().split(" ")
+                wr1 = "".uppercase().split(" ")
             }
         }
 
