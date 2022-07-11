@@ -26,6 +26,7 @@ class RatingFragment: Fragment() {
         val image = view.findViewById<ImageView>(R.id.ratingImage)
         val text = view.findViewById<TextView>(R.id.ratingText)
         val rating = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getInt("Rating", 0)
+        val value = 100 // всего очков
         val days = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0 11,11")
 
         val edit = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).edit()
@@ -58,41 +59,42 @@ class RatingFragment: Fragment() {
             }
         }
 
-        text.text = "$rating/10 очков"
-        when(rating){
-            0 -> {
+        text.text = "$rating/$value очков"
+        val ratingP = (rating/value)*100
+        when(ratingP){
+            in 0..5 -> {
                 image.setImageResource(R.drawable.ic__0)
             }
-            1 -> {
+            in 6..15 -> {
                 image.setImageResource(R.drawable.ic__1)
             }
-            2 -> {
+            in 16..25 -> {
                 image.setImageResource(R.drawable.ic__2)
             }
-            3 -> {
+            in 26..35 -> {
                 image.setImageResource(R.drawable.ic__3)
             }
-            4 -> {
+            in 36..45 -> {
                 image.setImageResource(R.drawable.ic__4)
             }
-            5 -> {
+            in 46..55 -> {
                 image.setImageResource(R.drawable.ic__5)
             }
-            6 -> {
+            in 56..65 -> {
                 image.setImageResource(R.drawable.ic__6)
             }
-            7 -> {
+            in 66..75 -> {
                 image.setImageResource(R.drawable.ic__7)
             }
-            8 -> {
+            in 76..85 -> {
                 image.setImageResource(R.drawable.ic__8)
             }
-            9 -> {
+            in 86..95 -> {
                 image.setImageResource(R.drawable.ic__9)
             }
         }
 
-        if(rating >= 10){
+        if(ratingP >= 96){
             image.setImageResource(R.drawable.ic__10)
 
             val Day = days!!.split(" ").toTypedArray()
