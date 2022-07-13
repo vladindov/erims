@@ -13,8 +13,10 @@ import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.text.Html
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -24,8 +26,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.text.color
 import androidx.fragment.app.FragmentContainerView
+import com.amulyakhare.textdrawable.TextDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
+import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -156,68 +160,97 @@ class MainActivity : AppCompatActivity() {
         val f2 = m2.replace(Regex("""[,]"""), "").split(" ")
         val f1 = m1.replace(Regex("""[,]"""), "").split(" ")
 
-        val s4 = m4.split(", ")
-        val s3 = m3.split(", ")
-        val s2 = m2.split(", ")
-        val s1 = m1.split(", ")
-
         var n = similar(text, num!!)
 
-        val red = "#ff0000"
-        val green = "#008000"
-        val grey = "#7d7f7d"
-        var fiText = ""
+        val spannableStringBuilder = SpannableStringBuilder()
 
         for (i in text.uppercase().toWords()){
-            when (n){
-                4 -> {
-                    fiText += if (f4.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
-                        "<font color=$green>$i</font> "
-                    } else if (checker.toWords().indexOf(i) > -1) {
-                        "<font color=$grey>$i</font> "
-                    } else {
-                        fiText += "<font color=$red>$i</font> "
-                    }
-                }
-                3 -> {
-                    fiText += if (f3.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
-                        "<font color=$green>$i</font> "
-                    } else if (checker.toWords().indexOf(i) > -1) {
-                        "<font color=$grey>$i</font> "
-                    } else {
-                        fiText += "<font color=$red>$i</font> "
-                    }
-                }
-                2 -> {
-                    fiText += if (f2.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
-                        "<font color=$green>$i</font> "
-                    } else if (checker.toWords().indexOf(i) > -1) {
-                        "<font color=$grey>$i</font> "
-                    } else {
-                        fiText += "<font color=$red>$i</font> "
-                    }
-                }
-                1 -> {
-                    fiText += if (f1.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
-                        "<font color=$green>$i</font> "
-                    } else if (checker.toWords().indexOf(i) > -1) {
-                        "<font color=$grey>$i</font> "
-                    } else {
-                        fiText += "<font color=$red>$i</font> "
-                    }
-                }
+            if (f4.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GREEN), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else if (checker.uppercase().toWords().indexOf(i) > -1) {
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GRAY), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else if (f3.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GREEN), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else if (checker.uppercase().toWords().indexOf(i) > -1) {
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GRAY), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else if (f2.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GREEN), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else if (checker.uppercase().toWords().indexOf(i) > -1) {
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GRAY), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else if (f1.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GREEN), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else if (checker.uppercase().toWords().indexOf(i) > -1) {
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.GRAY), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
+            } else {
+                spannableStringBuilder.append("$i ")
+                spannableStringBuilder.setSpan(
+                    ForegroundColorSpan(Color.RED), // color
+                    spannableStringBuilder.length - i.length - 1, // start color from here
+                    spannableStringBuilder.length, // end here
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
+                )
             }
         }
 
-        findViewById<EditText>(R.id.editTextHeared).setText(Html.fromHtml(fiText))
+        findViewById<EditText>(R.id.editTextHeared).text = spannableStringBuilder
 
-        Toast.makeText(cont, "Ты сделал на $n/4", Toast.LENGTH_SHORT).show()
+        Toast.makeText(cont, "Ты сделал на $n баллов", Toast.LENGTH_SHORT).show()
         val editor = sharPref.edit()
-        if (num != null) {
-            editor?.putInt("maxHearedLevel", num + 1)
+        if (n>10) {
+            if (sharPref.getInt("maxHearedLevel",1) == num) {
+                editor?.putInt("maxHearedLevel", num + 1)
+            }
+            editor?.putInt("Rating", sharPref.getInt("Rating", 0) + n)
+            editor?.apply()
         }
-        editor?.putInt("Rating", sharPref.getInt("Rating", 0) + n)
-        editor?.apply()
 
         findViewById<Button>(R.id.hearedButton).text = "На главную"
         findViewById<Button>(R.id.hearedButton).setOnClickListener {
@@ -266,6 +299,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         b.visibility = View.INVISIBLE
+        thread {
+            while (mMediaPlayer?.isPlaying == true){
+                findViewById<EditText>(R.id.editTextHeared).isEnabled = false
+            }
+        }
     }
 
     // отклик программы на нажание перехода к уровню
@@ -303,7 +341,7 @@ class MainActivity : AppCompatActivity() {
     // запуск нужного уровня
     fun toWhatItGame(view: View){
         val v = resources.getResourceName(view.id)
-        val level = v.substring(v.lastIndexOf('/') + 1).replace("imageButtonWhatItLevel","").toInt()
+        val level = v.substring(v.lastIndexOf('/') + 1).replace("imageButtonHearedLevel","").toInt()
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE).edit()
         val max = getSharedPreferences("level", Context.MODE_PRIVATE).getInt("maxWhatItLevel", 1)
 
@@ -364,31 +402,6 @@ class MainActivity : AppCompatActivity() {
         sharPref.apply()
     }
 
-    // говоришь никому всякое
-    fun Say(view: View){
-        if (mMediaPlayer != null) {
-            mMediaPlayer!!.release()
-            mMediaPlayer = null
-        }
-
-        // Get the Intent action
-        val sttIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        // Language model defines the purpose, there are special models for other use cases, like search.
-        sttIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        // Adding an extra language, you can use any language from the Locale class.
-        sttIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        // Text that shows up on the Speech input prompt.
-        sttIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now!")
-        try {
-            // Start the intent for a result, and pass in our request code.
-            startActivityForResult(sttIntent, 1)
-        } catch (e: ActivityNotFoundException) {
-            // Handling error when the service is not available.
-            e.printStackTrace()
-            Toast.makeText(this, "Your device does not support STT.", Toast.LENGTH_LONG).show()
-        }
-    }
-
     // на всём, чего нет))
     fun GoodBye(view: View){
         Toast.makeText(this,"Будет добавлено позже",Toast.LENGTH_SHORT).show()
@@ -403,18 +416,18 @@ class MainActivity : AppCompatActivity() {
     fun String.toWords() = trim().replace(Regex("""[$,.;:'"-]"""), "").split(" ")
 
     fun similar(text: String, num: Int): Int{
-        lateinit var fr10: List<String>
-        lateinit var fr9: List<String>
-        lateinit var fr8: List<String>
-        lateinit var fr7: List<String>
-        lateinit var fr6: List<String>
-        lateinit var fr5: List<String>
-        lateinit var fr4: List<String>
-        lateinit var fr3: List<String>
-        lateinit var fr2: List<String>
-        lateinit var wr3: List<String>
-        lateinit var wr2: List<String>
-        lateinit var wr1: List<String>
+        var fr10 = "".uppercase().split(", ")
+        var fr9 = "".uppercase().split(", ")
+        var fr8 = "".uppercase().split(", ")
+        var fr7 = "".uppercase().split(", ")
+        var fr6 = "".uppercase().split(", ")
+        var fr5 = "".uppercase().split(", ")
+        var fr4 = "".uppercase().split(", ")
+        var fr3 = "".uppercase().split(", ")
+        var fr2 = "".uppercase().split(", ")
+        var wr3 = "".uppercase().split(", ")
+        var wr2 = "".uppercase().split(", ")
+        var wr1 = "".uppercase().split(", ")
 
         var count = 0
 
@@ -474,72 +487,86 @@ class MainActivity : AppCompatActivity() {
 
         val w = text.trim().replace(Regex("""[$,.;:'"-]"""), "").uppercase()
 
-        for (s in fr10){
-            if (s in w){
-                w.replace(s, "").trim()
-                count += 10
+        if (fr10.isNotEmpty()) {
+            for (s in fr10) {
+                if (s in w) {
+                    w.replace(s, "").trim()
+                    count += 10
+                }
             }
         }
+        if (fr9.isNotEmpty())
         for (s in fr9){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 6
             }
         }
+        if (fr8.isNotEmpty())
         for (s in fr8){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 6
             }
         }
+        if (fr7.isNotEmpty())
         for (s in fr7){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 6
             }
         }
+        if (fr6.isNotEmpty())
         for (s in fr6){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 6
             }
         }
+        if (fr5.isNotEmpty())
         for (s in fr5){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 5
             }
         }
+        if (fr4.isNotEmpty())
         for (s in fr4){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 4
             }
         }
+        if (fr3.isNotEmpty())
         for (s in fr3){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 3
             }
         }
+        w.uppercase().replace("Сладко потянулась".uppercase(), "")
+        if (wr3.isNotEmpty())
+            for (s in wr3){
+                if (s in w){
+                    w.replace(s, "").trim()
+                    count += 3
+                }
+            }
+        if (fr2.isNotEmpty())
         for (s in fr2){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 2
             }
         }
-        for (s in wr3){
-            if (s in w){
-                w.replace(s, "").trim()
-                count += 3
-            }
-        }
+        if (wr2.isNotEmpty())
         for (s in wr2){
             if (s in w){
                 w.replace(s, "").trim()
                 count += 2
             }
         }
+        if (wr1.isNotEmpty())
         for (s in wr1){
             if (s in w){
                 w.replace(s, "").trim()
@@ -547,34 +574,101 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        return count
-    }
-
-    // наговоил лишнего, а теперь принимем
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            // Handle the result for our request code.
-            1 -> {
-                // Safety checks to ensure data is available.
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    // Retrieve the result array.
-                    val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                    // Ensure result array is not null or empty to avoid errors.
-                    if (!result.isNullOrEmpty()) {
-                        // Recognized text is in the first position.
-                        val recognizedText = result[0]
-                        // Do what you want with the recognized text.
-                        findViewById<EditText>(R.id.editTextHeared).setText(recognizedText)
-                    }
-                }
-            }
-        }
+        return count-34
     }
 
     fun clearAllData(view: View){
         val ed = getSharedPreferences("level", Context.MODE_PRIVATE).edit()
-        ed.clear()
+        val testerCode = findViewById<EditText>(R.id.testerCodeText).text.toString()
+
+        when (testerCode) {
+            "clearALLdata" -> {
+                ed.clear()
+            }
+        }
+        if ("AllTo" in testerCode){
+            ed.putInt("maxWhatItLevel", testerCode.replace("AllTo", "").trim().toInt())
+            ed.putInt("maxHearedLevel", testerCode.replace("AllTo", "").trim().toInt())
+        }
+        if ("WhatIt" in testerCode){
+            ed.putInt("maxWhatItLevel", testerCode.replace("WhatIt", "").trim().toInt())
+        }
+        if ("Heared" in testerCode){
+            ed.putInt("maxHearedLevel", testerCode.replace("Heared", "").trim().toInt())
+        }
+        if ("setRating" in testerCode){
+            ed.putInt("Rating", testerCode.replace("setRating", "").trim().toInt())
+        }
+
+        if ("setOn" in testerCode) {
+            val days = getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0 11,11")
+            val Day = days!!.split(" ").toTypedArray()
+
+            when (testerCode.replace("setOn","")) {
+                "Monday" -> {
+                    Day[0] = "1"
+                }
+                "Tuesday" -> {
+                    Day[1] = "1"
+                }
+                "Wednesday" -> {
+                    Day[2] = "1"
+                }
+                "Thursday" -> {
+                    Day[3] = "1"
+                }
+                "Friday" -> {
+                    Day[4] = "1"
+                }
+                "Saturday" -> {
+                    Day[5] = "1"
+                }
+                "Sunday" -> {
+                    Day[6] = "1"
+                }
+            }
+
+            ed.putString(
+                "Days",
+                Day[0] + " " + Day[1] + " " + Day[2] + " " + Day[3] + " " + Day[4] + " " + Day[5] + " " + Day[6] + " " + Day[7]
+            )
+        }
+
+        if ("setOff" in testerCode) {
+            val days = getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0 11,11")
+            val Day = days!!.split(" ").toTypedArray()
+
+            when (testerCode.replace("setOff","")) {
+                "Monday" -> {
+                    Day[0] = "0"
+                }
+                "Tuesday" -> {
+                    Day[1] = "0"
+                }
+                "Wednesday" -> {
+                    Day[2] = "0"
+                }
+                "Thursday" -> {
+                    Day[3] = "0"
+                }
+                "Friday" -> {
+                    Day[4] = "0"
+                }
+                "Saturday" -> {
+                    Day[5] = "0"
+                }
+                "Sunday" -> {
+                    Day[6] = "0"
+                }
+            }
+
+            ed.putString(
+                "Days",
+                Day[0] + " " + Day[1] + " " + Day[2] + " " + Day[3] + " " + Day[4] + " " + Day[5] + " " + Day[6] + " " + Day[7]
+            )
+        }
+
+        findViewById<EditText>(R.id.testerCodeText).setText("")
         ed.apply()
     }
 
@@ -589,18 +683,5 @@ class MainActivity : AppCompatActivity() {
 
     // при нажатии "назад" ничего не делаем
     override fun onBackPressed() {
-    }
-
-    // тот самый чек пермишенов
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if(requestCode == 121 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            findViewById<Button>(R.id.butstat).isEnabled = true
-        }
     }
 }

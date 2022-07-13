@@ -64,15 +64,6 @@
             android:text="Напишите услышанное:"
             android:textSize="18dp" />
 
-        <ImageButton
-            android:id="@+id/imageButtonHearedMic"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:backgroundTint="#00111111"
-            android:onClick="Say"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_mic" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -106,7 +97,7 @@
                 android:imeOptions="actionNext"
                 android:inputType="textMultiLine"
                 android:paddingHorizontal="4dp"
-                android:paddingVertical="4dp" />
+                android:paddingVertical="4dp"/>
 
             <Button
                 android:id="@+id/hearedButton"

@@ -33,7 +33,9 @@ class HearedFragment: Fragment() {
         view.findViewById<TextView>(R.id.textHearedLevel).text = "Уровень $num"
 
         view.findViewById<Button>(R.id.hearedButton).setOnClickListener {
-            (activity as MainActivity).checkText(view.context, edit.text.toString())
+            if (edit.text.toString().trim() != "") {
+                (activity as MainActivity).checkText(view.context, edit.text.toString())
+            }
         }
 
         edit.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
