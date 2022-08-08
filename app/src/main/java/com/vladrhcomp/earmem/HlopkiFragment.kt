@@ -41,7 +41,7 @@ class HlopkiFragment: Fragment() {
         }
         val mr = MediaRecorder()
 
-        (activity as MainActivity).hlopkiStart(view)
+        //(activity as MainActivity).hlopkiStart(view)
 
         start.setOnClickListener {
             mr.setAudioSource(MediaRecorder.AudioSource.MIC)

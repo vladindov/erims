@@ -13,6 +13,9 @@ class WhatItLevelsFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.heared_levels_6,container,false)
         val max = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getInt("maxWhatItLevel", 1)
+        val podpiska = view.context.getSharedPreferences("val", Context.MODE_PRIVATE).getInt("podpiska", 0)
+
+        view.context.getSharedPreferences("timer", Context.MODE_PRIVATE).edit().putInt("whatItOn", System.currentTimeMillis().toInt()).apply()
 
         view.findViewById<ImageButton>(R.id.imageButtonHearedLevel1).setOnClickListener { (activity as MainActivity).toWhatItGame(view.findViewById<ImageButton>(R.id.imageButtonHearedLevel1)) }
         view.findViewById<ImageButton>(R.id.imageButtonHearedLevel2).setOnClickListener { (activity as MainActivity).toWhatItGame(view.findViewById<ImageButton>(R.id.imageButtonHearedLevel2)) }
@@ -23,7 +26,6 @@ class WhatItLevelsFragment: Fragment() {
         view.findViewById<ImageButton>(R.id.imageButtonHearedLevel7).setOnClickListener { (activity as MainActivity).toWhatItGame(view.findViewById<ImageButton>(R.id.imageButtonHearedLevel7)) }
         view.findViewById<ImageButton>(R.id.imageButtonHearedLevel8).setOnClickListener { (activity as MainActivity).toWhatItGame(view.findViewById<ImageButton>(R.id.imageButtonHearedLevel8)) }
         view.findViewById<ImageButton>(R.id.imageButtonHearedLevel9).setOnClickListener { (activity as MainActivity).toWhatItGame(view.findViewById<ImageButton>(R.id.imageButtonHearedLevel9)) }
-
         when(max){
             1 -> {
                 view.findViewById<TextView>(R.id.textView2).text = ""
@@ -114,14 +116,26 @@ class WhatItLevelsFragment: Fragment() {
                 view.findViewById<ImageButton>(R.id.imageButtonHearedLevel9).setImageResource(R.drawable.ic_blocked_level)
             }
             9 -> {
-                view.findViewById<TextView>(R.id.textView9).text = ""
-                view.findViewById<ImageButton>(R.id.imageButtonHearedLevel9).setImageResource(R.drawable.ic_blocked_level)
             }
             10 -> {
-                view.findViewById<TextView>(R.id.textView9).text = ""
-                view.findViewById<ImageButton>(R.id.imageButtonHearedLevel9).setImageResource(R.drawable.ic_blocked_level)
             }
         }
+
+        if (podpiska == 0){
+            view.findViewById<TextView>(R.id.textView4).text = ""
+            view.findViewById<ImageButton>(R.id.imageButtonHearedLevel4).setImageResource(R.drawable.ic_blocked_level)
+            view.findViewById<TextView>(R.id.textView5).text = ""
+            view.findViewById<ImageButton>(R.id.imageButtonHearedLevel5).setImageResource(R.drawable.ic_blocked_level)
+            view.findViewById<TextView>(R.id.textView6).text = ""
+            view.findViewById<ImageButton>(R.id.imageButtonHearedLevel6).setImageResource(R.drawable.ic_blocked_level)
+            view.findViewById<TextView>(R.id.textView7).text = ""
+            view.findViewById<ImageButton>(R.id.imageButtonHearedLevel7).setImageResource(R.drawable.ic_blocked_level)
+            view.findViewById<TextView>(R.id.textView8).text = ""
+            view.findViewById<ImageButton>(R.id.imageButtonHearedLevel8).setImageResource(R.drawable.ic_blocked_level)
+            view.findViewById<TextView>(R.id.textView9).text = ""
+            view.findViewById<ImageButton>(R.id.imageButtonHearedLevel9).setImageResource(R.drawable.ic_blocked_level)
+        }
+
         return view
     }
 

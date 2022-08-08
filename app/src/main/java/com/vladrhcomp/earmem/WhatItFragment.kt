@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import java.lang.NullPointerException
 import kotlin.concurrent.thread
 
 class WhatItFragment: Fragment() {
@@ -30,16 +31,21 @@ class WhatItFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val max = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getInt("maxWhatItLevel", 1)
         val level = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatItLevel", 1)
-        val but1 = view.findViewById<Button>(R.id.button)
-        val but2 = view.findViewById<Button>(R.id.button2)
-        val but3 = view.findViewById<Button>(R.id.button3)
-        val but4 = view.findViewById<Button>(R.id.button4)
-        val but5 = view.findViewById<Button>(R.id.button5)
-        val but6 = view.findViewById<Button>(R.id.button6)
-        val but7 = view.findViewById<Button>(R.id.button7)
-        val but8 = view.findViewById<Button>(R.id.button8)
-        val but9 = view.findViewById<Button>(R.id.button9)
-        val but10 = view.findViewById<Button>(R.id.button10)
+        val but1 = view.findViewById<ImageButton>(R.id.button)
+        val but2 = view.findViewById<ImageButton>(R.id.button2)
+        val but3 = view.findViewById<ImageButton>(R.id.button3)
+        val but4 = view.findViewById<ImageButton>(R.id.button4)
+        val but5 = view.findViewById<ImageButton>(R.id.button5)
+        val but6 = view.findViewById<ImageButton>(R.id.button6)
+        val but7 = view.findViewById<ImageButton>(R.id.button7)
+        val but8 = view.findViewById<ImageButton>(R.id.button8)
+        val but9 = view.findViewById<ImageButton>(R.id.button9)
+        val but10 = view.findViewById<ImageButton>(R.id.button10)
+        val but11 = view.findViewById<ImageButton>(R.id.button11)
+        val but12 = view.findViewById<ImageButton>(R.id.button12)
+        val but13 = view.findViewById<ImageButton>(R.id.button13)
+        val but14 = view.findViewById<ImageButton>(R.id.button14)
+        val but15 = view.findViewById<ImageButton>(R.id.button15)
         val imBut1 = view.findViewById<ImageButton>(R.id.imageButton1)
         val imBut2 = view.findViewById<ImageButton>(R.id.imageButton2)
         val imBut3 = view.findViewById<ImageButton>(R.id.imageButton3)
@@ -49,6 +55,7 @@ class WhatItFragment: Fragment() {
         val imBut7 = view.findViewById<ImageButton>(R.id.imageButton7)
         val imBut8 = view.findViewById<ImageButton>(R.id.imageButton8)
         val text4 = view.findViewById<TextView>(R.id.questionTextOfWhatIt)
+        val text5 = view.findViewById<TextView>(R.id.questionTextOfWhatIt5)
         val text8 = view.findViewById<TextView>(R.id.questionTextOfWhatIt8)
 
         view.findViewById<ConstraintLayout>(R.id.one).visibility = View.VISIBLE
@@ -66,25 +73,29 @@ class WhatItFragment: Fragment() {
             view.findViewById<LinearLayout>(R.id.fifth).visibility = View.INVISIBLE
 
             when (level) {
-                in 1..4 -> {
+                in 1..2 -> {
                     view.findViewById<LinearLayout>(R.id.fort).visibility = View.GONE
 
-                    view.findViewById<ImageButton>(R.id.imageButton3).visibility = View.GONE
-                    view.findViewById<ImageButton>(R.id.imageButton6).visibility = View.GONE
-                    view.findViewById<TextView>(R.id.textView3).visibility = View.GONE
-                    view.findViewById<TextView>(R.id.textView6).visibility = View.GONE
+                    view.findViewById<LinearLayout>(R.id.f3).visibility = View.GONE
+                    view.findViewById<LinearLayout>(R.id.f6).visibility = View.GONE
 
                     view.findViewById<TextView>(R.id.textView4).text = "3"
                     view.findViewById<TextView>(R.id.textView5).text = "4"
                 }
-                in 5..8 -> {
-                    view.findViewById<ImageButton>(R.id.imageButton3).visibility = View.GONE
-                    view.findViewById<ImageButton>(R.id.imageButton6).visibility = View.GONE
-                    view.findViewById<ImageButton>(R.id.imageButton9).visibility = View.GONE
+                in 3..5 -> {
+                    view.findViewById<LinearLayout>(R.id.f3).visibility = View.GONE
+                    view.findViewById<LinearLayout>(R.id.f6).visibility = View.GONE
+                    view.findViewById<LinearLayout>(R.id.f8).visibility = View.GONE
+                    view.findViewById<LinearLayout>(R.id.f9).visibility = View.GONE
 
-                    view.findViewById<TextView>(R.id.textView3).visibility = View.GONE
-                    view.findViewById<TextView>(R.id.textView6).visibility = View.GONE
-                    view.findViewById<TextView>(R.id.textView9).visibility = View.GONE
+                    view.findViewById<TextView>(R.id.textView4).text = "3"
+                    view.findViewById<TextView>(R.id.textView5).text = "4"
+                    view.findViewById<TextView>(R.id.textView7).text = "5"
+                }
+                in 6..9 -> {
+                    view.findViewById<LinearLayout>(R.id.f3).visibility = View.GONE
+                    view.findViewById<LinearLayout>(R.id.f6).visibility = View.GONE
+                    view.findViewById<LinearLayout>(R.id.f9).visibility = View.GONE
 
                     view.findViewById<TextView>(R.id.textView4).text = "3"
                     view.findViewById<TextView>(R.id.textView5).text = "4"
@@ -250,6 +261,17 @@ class WhatItFragment: Fragment() {
                     }
                     it.visibility = View.INVISIBLE
                 }
+                view.findViewById<ImageButton>(R.id.imageButton7).setOnClickListener{
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.summer_pole)
+                        mMediaPlayer!!.start()
+                    } else  {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.summer_pole)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
             }
             4 -> {
                 view.findViewById<ImageButton>(R.id.imageButton1).setOnClickListener {
@@ -292,6 +314,17 @@ class WhatItFragment: Fragment() {
                     } else  {
                         mMediaPlayer!!.stop()
                         mMediaPlayer = MediaPlayer.create(context, R.raw.cat_eat)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
+                view.findViewById<ImageButton>(R.id.imageButton7).setOnClickListener{
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.door_boom)
+                        mMediaPlayer!!.start()
+                    } else  {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.door_boom)
                         mMediaPlayer!!.start()
                     }
                     it.visibility = View.INVISIBLE
@@ -349,17 +382,6 @@ class WhatItFragment: Fragment() {
                     } else  {
                         mMediaPlayer!!.stop()
                         mMediaPlayer = MediaPlayer.create(context, R.raw.jingle_bells)
-                        mMediaPlayer!!.start()
-                    }
-                    it.visibility = View.INVISIBLE
-                }
-                view.findViewById<ImageButton>(R.id.imageButton8).setOnClickListener{
-                    if (mMediaPlayer == null) {
-                        mMediaPlayer = MediaPlayer.create(context, R.raw.moy)
-                        mMediaPlayer!!.start()
-                    } else  {
-                        mMediaPlayer!!.stop()
-                        mMediaPlayer = MediaPlayer.create(context, R.raw.moy)
                         mMediaPlayer!!.start()
                     }
                     it.visibility = View.INVISIBLE
@@ -569,11 +591,79 @@ class WhatItFragment: Fragment() {
                     it.visibility = View.INVISIBLE
                 }
             }
+            9 -> {
+                view.findViewById<ImageButton>(R.id.imageButton1).setOnClickListener {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.bird_fall)
+                        mMediaPlayer!!.start()
+                    } else {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.bird_fall)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
+                view.findViewById<ImageButton>(R.id.imageButton2).setOnClickListener {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.door_boom)
+                        mMediaPlayer!!.start()
+                    } else {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.door_boom)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
+                view.findViewById<ImageButton>(R.id.imageButton4).setOnClickListener {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.coffe)
+                        mMediaPlayer!!.start()
+                    } else {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.coffe)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
+                view.findViewById<ImageButton>(R.id.imageButton5).setOnClickListener {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.more_boom)
+                        mMediaPlayer!!.start()
+                    } else {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.more_boom)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
+                view.findViewById<ImageButton>(R.id.imageButton7).setOnClickListener {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.glass)
+                        mMediaPlayer!!.start()
+                    } else {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.glass)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
+                view.findViewById<ImageButton>(R.id.imageButton8).setOnClickListener {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.t_rex_roar)
+                        mMediaPlayer!!.start()
+                    } else {
+                        mMediaPlayer!!.stop()
+                        mMediaPlayer = MediaPlayer.create(context, R.raw.t_rex_roar)
+                        mMediaPlayer!!.start()
+                    }
+                    it.visibility = View.INVISIBLE
+                }
+            }
         }
 
         when (level) {
-            in 1..4 -> {
-                object : CountDownTimer(22000, 10) {
+            in 1..2 -> {
+                object : CountDownTimer(15000, 10) {
                     val textV = view.findViewById<Button>(R.id.qwert)
 
                     override fun onTick(millisUntilFinished: Long) {
@@ -581,18 +671,23 @@ class WhatItFragment: Fragment() {
                     }
 
                     override fun onFinish() {
-                        textV.text = "0"
-                        view.findViewById<LinearLayout>(R.id.first).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.second).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.third).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.forth).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.fifth).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.fort).visibility = View.GONE
+                        try {
+                            textV.text = "0"
+                            view.findViewById<LinearLayout>(R.id.first).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.second).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.third).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.forth).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.fifth).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.fort).visibility = View.GONE
+                            mMediaPlayer?.release()!!
+                        } catch (e: NullPointerException){
+                            return
+                        }
                     }
                 }.start()
             }
-            in 5..8 -> {
-                object : CountDownTimer(32000, 10) {
+            in 3..5 -> {
+                object : CountDownTimer(20000, 10) {
                     val textV = view.findViewById<Button>(R.id.qwert)
 
                     override fun onTick(millisUntilFinished: Long) {
@@ -600,13 +695,42 @@ class WhatItFragment: Fragment() {
                     }
 
                     override fun onFinish() {
-                        textV.text = "0"
-                        view.findViewById<LinearLayout>(R.id.first).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.second).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.third).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.forth).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.fifth).visibility = View.GONE
-                        view.findViewById<LinearLayout>(R.id.fort).visibility = View.GONE
+                        try {
+                            textV.text = "0"
+                            view.findViewById<LinearLayout>(R.id.first).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.second).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.third).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.forth).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.fifth).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.fort).visibility = View.GONE
+                            mMediaPlayer?.release()!!
+                        } catch (e: NullPointerException){
+                            return
+                        }
+                    }
+                }.start()
+            }
+            in 6..9 -> {
+                object : CountDownTimer(25000, 10) {
+                    val textV = view.findViewById<Button>(R.id.qwert)
+
+                    override fun onTick(millisUntilFinished: Long) {
+                        textV.text = (millisUntilFinished / 1000).toString() + "." + (millisUntilFinished - (millisUntilFinished/1000).toString().toInt() * 1000).toString()
+                    }
+
+                    override fun onFinish() {
+                        try {
+                            textV.text = "0"
+                            view.findViewById<LinearLayout>(R.id.first).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.second).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.third).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.forth).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.fifth).visibility = View.GONE
+                            view.findViewById<LinearLayout>(R.id.fort).visibility = View.GONE
+                            mMediaPlayer?.release()!!
+                        } catch (e: NullPointerException){
+                            return
+                        }
                     }
                 }.start()
             }
@@ -614,11 +738,14 @@ class WhatItFragment: Fragment() {
 
         thread {
             when (level) {
-                in 1..4 -> {
-                    Thread.sleep(22000)
+                in 1..2 -> {
+                    Thread.sleep(15000)
                 }
-                in 5..8 -> {
-                    Thread.sleep(32000)
+                in 3..5 -> {
+                    Thread.sleep(20000)
+                }
+                in 6..9 -> {
+                    Thread.sleep(25000)
                 }
             }
 
@@ -626,12 +753,17 @@ class WhatItFragment: Fragment() {
             if (mMediaPlayer?.isPlaying == true) mMediaPlayer!!.stop()
 
             when(level){
-                in 1..4 -> {
+                in 1..2 -> {
                     mainThread.post {
                         view.findViewById<LinearLayout>(R.id.linearFinalWhatIt4).visibility = View.VISIBLE
                     }
                 }
-                in 5..8 -> {
+                in 3..5 -> {
+                    mainThread.post {
+                        view.findViewById<LinearLayout>(R.id.linearFinalWhatIt5).visibility = View.VISIBLE
+                    }
+                }
+                in 6..9 -> {
                     mainThread.post {
                         view.findViewById<LinearLayout>(R.id.linearFinalWhatIt8).visibility = View.VISIBLE
                     }
@@ -641,57 +773,63 @@ class WhatItFragment: Fragment() {
             when(level){
                 1 -> {
                     mainThread.post {
-                        text4.text = "На какой аудиозаписи было слышно рёв тирекса?"
+                        text4.text = "Где вы услышали рёв тирекса?"
                         buttonCheck(view, level, but1, but2, but3, but4, 2)
                     }
                 }
                 2 -> {
                     mainThread.post {
-                        text4.text = "На какой аудиозаписи было слышно ночь?"
+                        text4.text = "Где вы услышали ночь?"
                         buttonCheck(view, level, but1, but2, but3, but4, 3)
                     }
                 }
                 3 -> {
                     mainThread.post {
-                        text4.text = "На какой аудиозаписи было слышно храп?"
-                        buttonCheck(view, level, but1, but2, but3, but4, 2)
+                        text5.text = "Где вы услышали храп?"
+                        buttonCheckFor5(view, level, but11, but12, but13, but14, but15, 1)
                     }
                 }
                 4 -> {
                     mainThread.post {
-                        text4.text = "На какой аудиозаписи было слышно пролетающий самолёт?"
-                        buttonCheck(view, level, but1, but2, but3, but4, 2)
+                        text5.text = "Где вы услышали пролетающий самолёт?"
+                        buttonCheckFor5(view, level, but11, but12, but13, but14, but15, 2)
                     }
                 }
                 5 -> {
                     mainThread.post {
-                        text8.text = "На какой аудиозаписи было слышно взрыв?"
-                        buttonCheckFor8(view, level, but5, but6, but7, but8, but9, but10, 4)
+                        text5.text = "Где вы услышали взрыв?"
+                        buttonCheckFor5(view, level, but11, but12, but13, but14, but15, 4)
                     }
                 }
                 6 -> {
                     mainThread.post {
-                        text8.text = "На какой аудиозаписи было слышно скрип лодки?"
+                        text8.text = "Где вы услышали лодки?"
                         buttonCheckFor8(view, level, but5, but6, but7, but8, but9, but10, 1)
                     }
                 }
                 7 -> {
                     mainThread.post {
-                        text8.text = "На какой аудиозаписи было слышно звуки уборки пыли?"
+                        text8.text = "Где вы услышали звуки уборки пыли?"
                         buttonCheckFor8(view, level, but5, but6, but7, but8, but9, but10, 1)
                     }
                 }
                 8 -> {
                     mainThread.post {
-                        text8.text = "На какой аудиозаписи было слышно фырканье лошади?"
+                        text8.text = "Где вы услышали фырканье лошади?"
                         buttonCheckFor8(view, level, but5, but6, but7, but8, but9, but10, 6)
+                    }
+                }
+                9 -> {
+                    mainThread.post {
+                        text8.text = "Где вы услышали разбивающееся стекло?"
+                        buttonCheckFor8(view, level, but5, but6, but7, but8, but9, but10, 5)
                     }
                 }
             }
         }
     }
 
-    fun buttonCheck(view: View, level: Int, but1: Button, but2: Button, but3: Button, but4: Button, rightAns: Int){
+    fun buttonCheck(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, rightAns: Int){
         but1.No(view)
         but2.No(view)
         but3.No(view)
@@ -713,7 +851,33 @@ class WhatItFragment: Fragment() {
         }
     }
 
-    fun buttonCheckFor8(view: View, level: Int, but1: Button, but2: Button, but3: Button, but4: Button, but5: Button, but6: Button, rightAns: Int){
+    fun buttonCheckFor5(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, but5: ImageButton, rightAns: Int){
+        but1.No(view)
+        but2.No(view)
+        but3.No(view)
+        but4.No(view)
+        but5.No(view)
+
+        when(rightAns){
+            1 -> {
+                but1.Yes(view, level)
+            }
+            2 -> {
+                but2.Yes(view, level)
+            }
+            3 -> {
+                but3.Yes(view, level)
+            }
+            4 -> {
+                but4.Yes(view, level)
+            }
+            5 -> {
+                but5.Yes(view, level)
+            }
+        }
+    }
+
+    fun buttonCheckFor8(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, but5: ImageButton, but6: ImageButton, rightAns: Int){
         but1.No(view)
         but2.No(view)
         but3.No(view)
@@ -743,16 +907,45 @@ class WhatItFragment: Fragment() {
         }
     }
 
-    fun Button.No(view: View) = setOnClickListener {
+    fun ImageButton.No(view: View) = setOnClickListener {
         Toast.makeText(context, "Не правильно", Toast.LENGTH_SHORT).show()
         (activity as MainActivity).back(view)
     }
 
-    fun Button.Yes(view: View, level: Int) = setOnClickListener {
+    fun ImageButton.Yes(view: View, level: Int) = setOnClickListener {
         Toast.makeText(context, "Правильно", Toast.LENGTH_SHORT).show()
         (activity as MainActivity).back(view)
         context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("maxWhatItLevel", level + 1)?.apply()
         context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("Rating", context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.getInt("Rating", 0)!! + 1)?.apply()
+    }
+
+    override fun onStop() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer!!.release()
+            mMediaPlayer = null
+        }
+        val time = System.currentTimeMillis().toInt()
+        val whatTime = time - context?.getSharedPreferences("timer", Context.MODE_PRIVATE)!!.getInt("whatItOn", System.currentTimeMillis().toInt())
+        context?.getSharedPreferences("timer", Context.MODE_PRIVATE)?.edit()?.putInt("whatItFull", whatTime)?.apply()
+        super.onStop()
+    }
+
+    override fun onPause() {
+        val time = System.currentTimeMillis().toInt()
+        val whatTime = time - context?.getSharedPreferences("timer", Context.MODE_PRIVATE)!!.getInt("whatItOn", System.currentTimeMillis().toInt())
+        context?.getSharedPreferences("timer", Context.MODE_PRIVATE)?.edit()?.putInt("whatItFull", whatTime)?.apply()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer!!.release()
+            mMediaPlayer = null
+        }
+        val time = System.currentTimeMillis().toInt()
+        val whatTime = time - context?.getSharedPreferences("timer", Context.MODE_PRIVATE)!!.getInt("whatItOn", System.currentTimeMillis().toInt())
+        context?.getSharedPreferences("timer", Context.MODE_PRIVATE)?.edit()?.putInt("whatItFull", whatTime)?.apply()
+        super.onDestroy()
     }
 
     companion object{

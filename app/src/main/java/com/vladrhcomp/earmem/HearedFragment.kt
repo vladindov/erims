@@ -49,6 +49,27 @@ class HearedFragment: Fragment() {
         })
     }
 
+    override fun onStop() {
+        val time = System.currentTimeMillis().toInt()
+        val hearedTime = time - context?.getSharedPreferences("timer", Context.MODE_PRIVATE)!!.getInt("hearedOn", System.currentTimeMillis().toInt())
+        context?.getSharedPreferences("timer", Context.MODE_PRIVATE)?.edit()?.putInt("hearedFull", hearedTime)?.apply()
+        super.onStop()
+    }
+
+    override fun onPause() {
+        val time = System.currentTimeMillis().toInt()
+        val hearedTime = time - context?.getSharedPreferences("timer", Context.MODE_PRIVATE)!!.getInt("hearedOn", System.currentTimeMillis().toInt())
+        context?.getSharedPreferences("timer", Context.MODE_PRIVATE)?.edit()?.putInt("hearedFull", hearedTime)?.apply()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        val time = System.currentTimeMillis().toInt()
+        val hearedTime = time - context?.getSharedPreferences("timer", Context.MODE_PRIVATE)!!.getInt("hearedOn", System.currentTimeMillis().toInt())
+        context?.getSharedPreferences("timer", Context.MODE_PRIVATE)?.edit()?.putInt("hearedFull", hearedTime)?.apply()
+        super.onDestroy()
+    }
+
     companion object{
         fun newInsance() = HearedFragment()
     }

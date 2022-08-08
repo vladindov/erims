@@ -4,24 +4,32 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/back_ground.xml" value="0.3275" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/but_in_what.xml" value="0.386" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/button_background.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/edit_frame.xml" value="0.3275" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic__1.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_audio_play.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_background_rating.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_blocked_level.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_button_choose.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_calendar.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_choose.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.343" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_elephant.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_heared.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_icon_chat.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_icon_home.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_level1.xml" value="0.387" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_logo.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_mic.xml" value="0.3315" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_snow.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/ic_what.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/drawable/level.xml" value="0.387" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/bottom_nav.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/chat_fragment.xml" value="0.5" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/check.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/clap_handler.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/fragment_settings.xml" value="0.3859375" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/fragment_start.xml" value="0.33" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels_2.xml" value="0.38697916666666665" />
@@ -31,7 +39,8 @@
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_levels_6.xml" value="0.33" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/heared_text.xml" value="0.38697916666666665" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/main_activity.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/main_screen.xml" value="0.38697916666666665" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/main_screen.xml" value="0.33" />
+        <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/pro_code.xml" value="0.3859375" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/rating_fragment.xml" value="0.33" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/start_menu.xml" value="0.25" />
         <entry key="..\:/Users/Zver/AndroidStudioProjects/EarMem/app/src/main/res/layout/textheared.xml" value="0.25" />

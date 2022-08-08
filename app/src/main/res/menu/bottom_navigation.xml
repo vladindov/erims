@@ -2,21 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_frame"
+        android:icon="@drawable/ic_icon_home"
         android:title="" />
 
     <item
         android:id="@+id/navigation_stat"
-        android:icon="@drawable/sec"
+        android:icon="@drawable/ic_icon_rating"
         android:title="" />
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/thi"
+        android:icon="@drawable/ic_icon_trophy"
         android:title="" />
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/fo"
+        android:icon="@drawable/ic_icon_chat"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_more"
+        android:icon="@drawable/ic_icon_more"
         android:title="" />
 </menu>

@@ -1,34 +1,34 @@
 package com.vladrhcomp.earmem
 
-import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.media.MediaPlayer
+import android.net.ConnectivityManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.speech.RecognizerIntent
-import android.text.Html
+import android.os.Looper
+import android.provider.Settings
 import android.text.Spannable
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.view.KeyEvent
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.text.color
 import androidx.fragment.app.FragmentContainerView
-import com.amulyakhare.textdrawable.TextDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
+import org.jsoup.Jsoup
+import java.net.URL
 import kotlin.concurrent.thread
 
 
@@ -41,27 +41,120 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen)
 
-        findViewById<BottomNavigationView>(R.id.navigation_view).setOnItemSelectedListener{ item ->
+        try {
+            val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (cm.activeNetworkInfo!!.isConnected){
+                forUpdate()
+            }
+        } catch (e: java.lang.NullPointerException){
+            AlertDialog.Builder(this).setMessage("Подключитесь к интернету").setCancelable(false).setPositiveButton("Ок", DialogInterface.OnClickListener { dialog, which ->
+                this.finishAffinity()
+            }).show()
+        }
+
+        val error = getSharedPreferences("error", Context.MODE_PRIVATE).getString("appError", "")
+
+        if (error != ""){
+            AlertDialog.Builder(this).setTitle("В прошлой сессии произошла ошибка").setMessage("Отправить отчёт об ошибке разработчикам?").setCancelable(false)
+                .setPositiveButton("Да", DialogInterface.OnClickListener { dialog, which ->
+                    thread {
+                        Jsoup.connect("https://earmem.herokuapp.com/")
+                            .data("to", "errors")
+                            .data("error", error!!)
+                            .get()
+                    }
+                }).setNegativeButton("Нет", null).show()
+
+            getSharedPreferences("error", Context.MODE_PRIVATE).edit().putString("appError", "").apply()
+        }
+
+        Thread.setDefaultUncaughtExceptionHandler { paramThread, paramThrowable ->
+
+            val errorReport = SpannableStringBuilder()
+            errorReport.append("************ CAUSE OF ERROR ************\n\n")
+            errorReport.append(paramThrowable.toString())
+            errorReport.append("\n************ DEVICE INFORMATION ***********\n")
+            errorReport.append("Brand: ")
+            errorReport.append(Build.BRAND)
+            errorReport.append("\n")
+            errorReport.append("Device: ")
+            errorReport.append(Build.DEVICE)
+            errorReport.append("\n")
+            errorReport.append("Model: ")
+            errorReport.append(Build.MODEL)
+            errorReport.append("\n")
+            errorReport.append("Id: ")
+            errorReport.append(Build.ID)
+            errorReport.append("\n")
+            errorReport.append("Product: ")
+            errorReport.append(Build.PRODUCT)
+            errorReport.append("\n")
+            errorReport.append("\n************ FIRMWARE ************\n")
+            errorReport.append("SDK: ")
+            errorReport.append(Build.VERSION.SDK_INT.toString())
+            errorReport.append("\n")
+            errorReport.append("Release: ")
+            errorReport.append(Build.VERSION.RELEASE)
+            errorReport.append("\n")
+            errorReport.append("Incremental: ")
+            errorReport.append(Build.VERSION.INCREMENTAL)
+            errorReport.append("\n")
+
+            getSharedPreferences("error", Context.MODE_PRIVATE).edit().putString("appError", errorReport.toString()).apply()
+
+            thread {
+                Thread.sleep(100)
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                this.startActivity(intent)
+                if (this is Activity) {
+                    (this as Activity).finish()
+                }
+                Runtime.getRuntime().exit(0)
+            }
+        }
+
+        getSharedPreferences("timer", Context.MODE_PRIVATE).edit().putInt("appOn", System.currentTimeMillis().toInt()).apply()
+        getSharedPreferences("timer", Context.MODE_PRIVATE).edit().putInt("hearedFull", -5000).apply()
+        getSharedPreferences("timer", Context.MODE_PRIVATE).edit().putInt("whatItFull", -5000).apply()
+
+        val vhod = getSharedPreferences("fir", Context.MODE_PRIVATE).getInt("vhod",0)
+        if (vhod == 0){
+            getSharedPreferences("fir", Context.MODE_PRIVATE).edit().putInt("vhod", 1).apply()
+            getSharedPreferences("val", Context.MODE_PRIVATE).edit().putInt("podpiska", 0).apply()
+        }
+
+        val navig = findViewById<BottomNavigationView>(R.id.navigation_view)
+
+        navig.itemIconSize = 150
+        navig.setOnItemSelectedListener{ item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
+                    back(findViewById<BottomNavigationView>(R.id.navigation_view))
+
                     findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.GONE
                     findViewById<FragmentContainerView>(R.id.mainFragment).visibility = View.VISIBLE
                     val set = item.icon
-                    set.mutate().setColorFilter(resources.getColor(R.color.white), PorterDuff.Mode.SRC_IN)
+                    set.mutate().setColorFilter(resources.getColor(R.color.blue), PorterDuff.Mode.SRC_IN)
                     item.icon = set
                     supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
                     return@setOnItemSelectedListener true
                 }
                 R.id.navigation_dashboard -> {
+                    back(findViewById<BottomNavigationView>(R.id.navigation_view))
+
                     findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.VISIBLE
                     findViewById<FragmentContainerView>(R.id.mainFragment).visibility = View.GONE
                     supportFragmentManager.beginTransaction().replace(R.id.ratingContainer, ChatFragment.newInsance()).commit()
+
                     return@setOnItemSelectedListener true
                 }
                 R.id.navigation_notifications -> {
                     Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
                 }
                 R.id.navigation_stat -> {
+                    back(findViewById<BottomNavigationView>(R.id.navigation_view))
+
                     findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.VISIBLE
                     val set = item.icon
                     set.mutate().setColorFilter(resources.getColor(R.color.white), PorterDuff.Mode.SRC_IN)
@@ -69,25 +162,18 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().replace(R.id.ratingContainer, RatingFragment.newInsance()).commit()
                     return@setOnItemSelectedListener true
                 }
+                R.id.navigation_more -> {
+                    findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.GONE
+                    findViewById<FragmentContainerView>(R.id.mainFragment).visibility = View.VISIBLE
+                    back(findViewById(R.id.mainFragment))
+                    supportFragmentManager.beginTransaction().replace(R.id.mainFragment, SettingsFragment.newInsance()).commit()
+                    return@setOnItemSelectedListener true
+                }
             }
             false
         }
 
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
-    }
-
-    // проверка пермишенов и включение игры
-    fun hlopkiStart(view: View){
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED){
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE), 121)
-        }else{
-            findViewById<Button>(R.id.butstat).isEnabled = true
-        }
-    }
-
-    // будет открывать игру
-    fun toHlop(view: View){
-        supportFragmentManager.beginTransaction().replace(R.id.mainFragment, HlopkiFragment.newInsance()).commit()
     }
 
     // чисто проверка текста и начисление баллов
@@ -242,7 +328,12 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<EditText>(R.id.editTextHeared).text = spannableStringBuilder
 
-        Toast.makeText(cont, "Ты сделал на $n баллов", Toast.LENGTH_SHORT).show()
+        if (n > 0){
+            Toast.makeText(cont, "Ты сделал на $n баллов", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(cont, "Ты сделал на 0 баллов", Toast.LENGTH_SHORT).show()
+        }
+
         val editor = sharPref.edit()
         if (n>10) {
             if (sharPref.getInt("maxHearedLevel",1) == num) {
@@ -300,8 +391,22 @@ class MainActivity : AppCompatActivity() {
         }
         b.visibility = View.INVISIBLE
         thread {
-            while (mMediaPlayer?.isPlaying == true){
-                findViewById<EditText>(R.id.editTextHeared).isEnabled = false
+            try {
+                while (mMediaPlayer?.isPlaying == true) {
+                    runOnUiThread {
+                        try {
+                            findViewById<EditText>(R.id.editTextHeared).isEnabled = false
+                        } catch (e: NullPointerException) {
+                            return@runOnUiThread
+                        }
+                    }
+                }
+            } catch (e: IllegalStateException){
+                return@thread
+            }
+            runOnUiThread {
+                findViewById<EditText>(R.id.editTextHeared).isEnabled = true
+                mMediaPlayer?.release()!!
             }
         }
     }
@@ -310,6 +415,7 @@ class MainActivity : AppCompatActivity() {
     fun playRepeat(view: View){
         val numb = resources.getResourceName(view.id)
         val num = numb.substring(numb.lastIndexOf('/') + 1).replace("imageButtonHearedLevel", "").toInt()
+        val podpiska = view.context.getSharedPreferences("val", Context.MODE_PRIVATE).getInt("podpiska", 0)
 
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
         val editor = sharPref.edit()
@@ -317,7 +423,10 @@ class MainActivity : AppCompatActivity() {
         val max = sharPref.getInt("maxHearedLevel",1)
 
         if (num in 1..max){
-            supportFragmentManager.beginTransaction().replace(R.id.mainFragment, HearedFragment.newInsance()).commit()
+            if ((num == 1 && podpiska == 0) || podpiska == 1)
+                supportFragmentManager.beginTransaction().replace(R.id.mainFragment, HearedFragment.newInsance()).commit()
+            else
+                Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
         }else{
             Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
         }
@@ -325,10 +434,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     // возвращение к главному экрану
-    fun back(view: View) {
+    fun back(view: View?) {
         supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
         if (mMediaPlayer?.isPlaying == true){
-            mMediaPlayer?.stop()!!
+            mMediaPlayer?.release()!!
             mMediaPlayer = null
         }
     }
@@ -344,54 +453,81 @@ class MainActivity : AppCompatActivity() {
         val level = v.substring(v.lastIndexOf('/') + 1).replace("imageButtonHearedLevel","").toInt()
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE).edit()
         val max = getSharedPreferences("level", Context.MODE_PRIVATE).getInt("maxWhatItLevel", 1)
+        val podpiska = getSharedPreferences("val", Context.MODE_PRIVATE).getInt("podpiska", 0)
 
-        when(max.toString()){
+        when(level.toString()){
             "1" -> {
-                if(level<2) {
+                if(max>0) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 }
             }
             "2" -> {
-                if(level<3) {
+                if(max>1) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 }
             }
             "3" -> {
-                if(level<4) {
+                if(max>2) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 }
             }
             "4" -> {
-                if(level<5) {
+                if(max>3 && podpiska == 1) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
+                } else {
+                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
                 }
             }
             "5" -> {
-                if(level<6) {
+                if(max>4 && podpiska == 1) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
+                } else {
+                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
                 }
             }
             "6" -> {
-                if(level<7) {
+                if(max>5 && podpiska == 1) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
+                } else {
+                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
                 }
             }
             "7" -> {
-                if(level<8) {
+                if(max>6 && podpiska == 1) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
+                } else {
+                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
                 }
             }
             "8" -> {
-                if(level<9) {
+                if(max>7 && podpiska == 1) {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
+                } else {
+                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                }
+            }
+            "9" -> {
+                if(max>8 && podpiska == 1) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
+                } else {
+                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                }
+            }
+            "10" -> {
+                if(max>9 && podpiska == 1) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
+                } else {
+                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -577,6 +713,62 @@ class MainActivity : AppCompatActivity() {
         return count-34
     }
 
+    fun sendData(){
+        val android_id = Settings.Secure.getString(contentResolver, "android_id")
+        val android_name = Settings.Global.getString(contentResolver, "device_name")
+        val time = System.currentTimeMillis().toInt()
+        val on = getSharedPreferences("timer", MODE_PRIVATE).getInt("appOn", time)
+        val what = getSharedPreferences("timer", MODE_PRIVATE).getInt("whatItFull", -5000)
+        val heared = getSharedPreferences("timer", MODE_PRIVATE).getInt("hearedFull", -5000)
+        val rating = getSharedPreferences("level", Context.MODE_PRIVATE).getInt("Rating", 0).toString()
+
+        thread {
+            if (rating != "0") {
+                Jsoup.connect("https://earmem.herokuapp.com/")
+                    .data("to", "info")
+                    .data("id", "$android_id//$android_name")
+                    .data("all", ((time - on)/1000).toString())
+                    .data("what", (what/1000).toString())
+                    .data("write", (heared/1000).toString())
+                    .data("num", rating)
+                    .get()
+            } else {
+                Jsoup.connect("https://earmem.herokuapp.com/")
+                    .data("to", "info")
+                    .data("id", "$android_id//$android_name")
+                    .data("all", ((time - on)/1000).toString())
+                    .data("what", (what/1000).toString())
+                    .data("write", (heared/1000).toString())
+                    .data("num", "-5")
+                    .get()
+            }
+        }
+    }
+
+    fun forUpdate(){
+        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (cm.activeNetworkInfo!!.isConnected) {
+            thread {
+                val ver = Jsoup.connect("https://earmem.herokuapp.com/").get().body().text().trim()
+                if (ver != BuildConfig.VERSION_NAME) {
+                    runOnUiThread {
+                        AlertDialog.Builder(this).setCancelable(false)
+                            .setMessage("Обновите приложение!!!")
+                            .setPositiveButton(
+                                "Перейти к скачиванию",
+                                DialogInterface.OnClickListener { dialog, which ->
+                                    val browserIntent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("http://earmem.ru/#app")
+                                    )
+                                    startActivity(browserIntent)
+                                }).show()
+                    }
+                }
+            }
+        }
+    }
+
     fun clearAllData(view: View){
         val ed = getSharedPreferences("level", Context.MODE_PRIVATE).edit()
         val testerCode = findViewById<EditText>(R.id.testerCodeText).text.toString()
@@ -598,6 +790,9 @@ class MainActivity : AppCompatActivity() {
         }
         if ("setRating" in testerCode){
             ed.putInt("Rating", testerCode.replace("setRating", "").trim().toInt())
+        }
+        if ("P" in testerCode){
+            getSharedPreferences("val", Context.MODE_PRIVATE).edit().putInt("podpiska", testerCode.replace("P", "").trim().toInt()).apply()
         }
 
         if ("setOn" in testerCode) {
@@ -672,16 +867,60 @@ class MainActivity : AppCompatActivity() {
         ed.apply()
     }
 
+    //про версию купить
+    fun proVer(view: View){
+        val v = this.layoutInflater.inflate(R.layout.pro_code, null)
+
+        AlertDialog.Builder(this).setMessage("Хотите купить подписку?")
+            .setPositiveButton("Да (сайт оплаты)", DialogInterface.OnClickListener { dialog, which ->
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://earmem.ru/#podpiska"))
+                startActivity(browserIntent)
+            })
+            .setNegativeButton("У меня уже есть код", DialogInterface.OnClickListener { dialog, which ->
+                AlertDialog.Builder(this).setView(v)
+                    .setPositiveButton("Активировать",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            val code = v.findViewById<EditText>(R.id.codeEdit).text.toString()
+                            val codes:Array<String> = arrayOf("O4pK06gAVZ0s", "zK32jt9CIjeb", "0xCg18PbUQl9", "53Ed1zv97cZS", "Z9ak670XRtrp", "qK09LMv4q1Ep", "U48HCrT1Abn2", "a8R00905Naii", "mL6043m0rkGs", "J90t76F8D98k", "7YT09gVopXlo", "40F7sX3vqrry", "zJ484qMdk3Zc", "RL64hHw26s2I", "8Es5IOZTZ0bH", "In3t34gG2HhE", "Tl9BD938HQQ7", "6nSf38Ne4aJZ", "XLn21jJ0C09i", "Bs436Ta3NXnm")
+                            if (code in codes){
+                                AlertDialog.Builder(this).setMessage("Вы успешно активировали подписку").setPositiveButton("Ок", null).show()
+                                getSharedPreferences("val", Context.MODE_PRIVATE).edit().putInt("podpiska", 1).apply()
+                            }
+                        })
+                    .setNegativeButton("Отмена",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            dialog.cancel()
+                        }).show()
+            })
+            .setNeutralButton("Отмена", DialogInterface.OnClickListener { dialog, which ->
+                dialog.cancel()
+            })
+            .show()
+    }
+
     // При сворачивании выключаем ненужное *надо знать life cycle
     override fun onStop() {
-        super.onStop()
         if (mMediaPlayer != null) {
             mMediaPlayer!!.release()
             mMediaPlayer = null
         }
+        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (cm.activeNetworkInfo!!.isConnected) {
+            sendData()
+        }
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (cm.activeNetworkInfo!!.isConnected) {
+            sendData()
+        }
+        super.onDestroy()
     }
 
     // при нажатии "назад" ничего не делаем
     override fun onBackPressed() {
+        back(findViewById(R.id.mainFragment))
     }
 }

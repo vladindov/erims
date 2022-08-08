@@ -33,7 +33,7 @@
         android:layout_marginStart="33dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/elephant"
+        app:srcCompat="@drawable/logo"
         android:alpha="1"/>
 
     <androidx.fragment.app.FragmentContainerView

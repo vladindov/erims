@@ -10,4 +10,5 @@
     <color name="bedWhite">#4D000000</color>
     <color name="invisible">#00000000</color>
     <color name="blue">#FF32CCE1</color>
+    <color name="gray">#FF474747</color>
 </resources>

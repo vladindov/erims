@@ -330,38 +330,39 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="5"
         android:orientation="horizontal"
-        android:layout_weight="5">
+        android:visibility="invisible">
 
         <ImageButton
             android:id="@+id/imageButtonHearedLevel10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/white"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_blocked_level"
-            android:onClick="playRepeat" />
+            android:backgroundTint="@color/white"
+            android:onClick="playRepeat"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_blocked_level" />
 
         <ImageButton
             android:id="@+id/imageButtonHearedLevel11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/white"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_blocked_level"
-            android:onClick="playRepeat" />
+            android:backgroundTint="@color/white"
+            android:onClick="playRepeat"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_blocked_level" />
 
         <ImageButton
             android:id="@+id/imageButtonHearedLevel12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:backgroundTint="@color/white"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_blocked_level"
-            android:onClick="playRepeat" />
+            android:backgroundTint="@color/white"
+            android:onClick="playRepeat"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_blocked_level" />
     </LinearLayout>
 
 </LinearLayout>
