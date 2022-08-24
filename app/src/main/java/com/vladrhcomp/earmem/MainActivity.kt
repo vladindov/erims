@@ -65,13 +65,13 @@ class MainActivity : AppCompatActivity() {
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
 
         val editor = sharPref.edit()
-        thread {
-            if (sharPref.getInt("id", 0) == 0) {
+        if (sharPref.getInt("Id", 0) == 0) {
+            thread {
                 val idSite = Jsoup.connect("https://earmem.herokuapp.com/")
                     .data("to", "percentCheck").get()
                 val id = idSite.select("td").first()?.text()!!.toInt() + 1
 
-                editor.putInt("id", id)
+                editor.putInt("Id", id)
                 editor.apply()
             }
         }
@@ -335,15 +335,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         val editor = sharPref.edit()
-        if (sharPref.getString("write$num", "") != "000") {
-            editor.putString("write$num", "000")
+        if (sharPref.getInt("Write$num", 0) != 1000) {
+            editor.putInt("Write$num", 1000)
             val percentage =
                 (acceptedWrods / checker.uppercase().toWords().toTypedArray().size) * 100
 
             thread {
                 Jsoup.connect("https://earmem.herokuapp.com/")
                     .data("to", "percentage")
-                    .data("id", sharPref.getInt("id", 0).toString())
+                    .data("id", sharPref.getInt("Id", 0).toString())
                     .data("level", "write$num")
                     .data("percent", "$percentage").get()
             }
@@ -762,12 +762,71 @@ class MainActivity : AppCompatActivity() {
                 Jsoup.connect("https://earmem.herokuapp.com/")
                     .data("to", "info")
                     .data("id", "$android_id//$android_name")
-                    .data("all", ((time - on)/1000).toString())
-                    .data("what", (what/1000).toString())
-                    .data("write", (heared/1000).toString())
+                    .data("all", ((time - on) / 1000).toString())
+                    .data("what", (what / 1000).toString())
+                    .data("write", (heared / 1000).toString())
                     .data("num", "-5")
                     .get()
             }
+        }
+
+        var writes = 0
+        var i = 1
+        while (i < 6) {
+            if (getSharedPreferences("level", Context.MODE_PRIVATE).getInt(
+                    "Write$i",
+                    1000
+                ) != 1000
+            ) {
+                writes += getSharedPreferences("level", Context.MODE_PRIVATE).getInt("Write$i", 0)
+                i++
+            } else {
+                break
+            }
+        }
+        val wI = i
+        var heareds = 0
+        i = 1
+        while (i < 10) {
+            if (getSharedPreferences("level", Context.MODE_PRIVATE).getInt(
+                    "whatit$i",
+                    1000
+                ) != 1000
+            ) {
+                heareds += getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatit$i", 0)
+                i++
+            } else {
+                break
+            }
+        }
+        Toast.makeText(
+            this,
+            getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatit1", 10000).toString(),
+            Toast.LENGTH_SHORT
+        ).show()
+        Toast.makeText(
+            this,
+            getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatit2", 10000).toString(),
+            Toast.LENGTH_SHORT
+        ).show()
+        Toast.makeText(
+            this,
+            getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatit3", 10000).toString(),
+            Toast.LENGTH_SHORT
+        ).show()
+        thread {
+            if (writes == 0) writes = -5
+            if (heareds == 0) heareds = -5
+
+            Jsoup.connect("https://earmem.herokuapp.com/")
+                .data("to", "setAllLevels")
+                .data(
+                    "id",
+                    getSharedPreferences("level", Context.MODE_PRIVATE).getInt("Id", 0).toString()
+                )
+                .data("write", (writes / wI).toString())
+                .data("hear", (heareds / i).toString())
+                .get()
         }
     }
 
@@ -775,7 +834,8 @@ class MainActivity : AppCompatActivity() {
         val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         if (cm.activeNetworkInfo!!.isConnected) {
             thread {
-                val ver = Jsoup.connect("https://earmem.herokuapp.com/").get().body().text().trim()
+                val ver =
+                    Jsoup.connect("https://earmem.herokuapp.com/").get().select("p").text().trim()
                 if (ver != BuildConfig.VERSION_NAME) {
                     runOnUiThread {
                         AlertDialog.Builder(this).setCancelable(false)

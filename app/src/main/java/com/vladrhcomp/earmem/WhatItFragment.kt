@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import java.lang.NullPointerException
 import kotlin.concurrent.thread
 
 class WhatItFragment: Fragment() {
@@ -830,12 +829,12 @@ class WhatItFragment: Fragment() {
     }
 
     fun buttonCheck(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, rightAns: Int){
-        but1.No(view)
-        but2.No(view)
-        but3.No(view)
-        but4.No(view)
+        but1.No(view, level)
+        but2.No(view, level)
+        but3.No(view, level)
+        but4.No(view, level)
 
-        when(rightAns){
+        when (rightAns) {
             1 -> {
                 but1.Yes(view, level)
             }
@@ -851,14 +850,14 @@ class WhatItFragment: Fragment() {
         }
     }
 
-    fun buttonCheckFor5(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, but5: ImageButton, rightAns: Int){
-        but1.No(view)
-        but2.No(view)
-        but3.No(view)
-        but4.No(view)
-        but5.No(view)
+    fun buttonCheckFor5(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, but5: ImageButton, rightAns: Int) {
+        but1.No(view, level)
+        but2.No(view, level)
+        but3.No(view, level)
+        but4.No(view, level)
+        but5.No(view, level)
 
-        when(rightAns){
+        when (rightAns) {
             1 -> {
                 but1.Yes(view, level)
             }
@@ -877,15 +876,15 @@ class WhatItFragment: Fragment() {
         }
     }
 
-    fun buttonCheckFor8(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, but5: ImageButton, but6: ImageButton, rightAns: Int){
-        but1.No(view)
-        but2.No(view)
-        but3.No(view)
-        but4.No(view)
-        but5.No(view)
-        but6.No(view)
+    fun buttonCheckFor8(view: View, level: Int, but1: ImageButton, but2: ImageButton, but3: ImageButton, but4: ImageButton, but5: ImageButton, but6: ImageButton, rightAns: Int) {
+        but1.No(view, level)
+        but2.No(view, level)
+        but3.No(view, level)
+        but4.No(view, level)
+        but5.No(view, level)
+        but6.No(view, level)
 
-        when(rightAns){
+        when (rightAns) {
             1 -> {
                 but1.Yes(view, level)
             }
@@ -907,16 +906,33 @@ class WhatItFragment: Fragment() {
         }
     }
 
-    fun ImageButton.No(view: View) = setOnClickListener {
+    fun ImageButton.No(view: View, level: Int) = setOnClickListener {
         Toast.makeText(context, "Не правильно", Toast.LENGTH_SHORT).show()
         (activity as MainActivity).back(view)
+        if (context?.getSharedPreferences("level", Context.MODE_PRIVATE)
+                ?.getInt("whatit$level", 10000) == 10000
+        )
+            context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()
+                ?.putInt("whatit$level", 0)?.apply()
     }
 
     fun ImageButton.Yes(view: View, level: Int) = setOnClickListener {
         Toast.makeText(context, "Правильно", Toast.LENGTH_SHORT).show()
         (activity as MainActivity).back(view)
-        context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("maxWhatItLevel", level + 1)?.apply()
-        context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt("Rating", context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.getInt("Rating", 0)!! + 1)?.apply()
+        if (context?.getSharedPreferences("level", Context.MODE_PRIVATE)
+                ?.getInt("whatit$level", 10000) == 10000
+        )
+            context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()
+                ?.putInt("whatit$level", 100)?.apply()
+        if (level == context?.getSharedPreferences("level", Context.MODE_PRIVATE)
+                ?.getInt("maxWhatItLevel", 1)
+        )
+            context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()
+                ?.putInt("maxWhatItLevel", level + 1)?.apply()
+        context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.edit()?.putInt(
+            "Rating",
+            context?.getSharedPreferences("level", Context.MODE_PRIVATE)?.getInt("Rating", 0)!! + 1
+        )?.apply()
     }
 
     override fun onStop() {
