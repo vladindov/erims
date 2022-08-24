@@ -2,7 +2,6 @@ package com.vladrhcomp.earmem
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -13,12 +12,10 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Looper
 import android.provider.Settings
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -28,7 +25,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.jsoup.Jsoup
-import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -41,21 +39,49 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen)
 
+        val days = getSharedPreferences("level", Context.MODE_PRIVATE).getString(
+            "Days",
+            "0 0 0 0 0 0 0 11,11"
+        )
+        val editD = getSharedPreferences("level", Context.MODE_PRIVATE).edit()
+        val nowDate = SimpleDateFormat("dd,MM").format(Calendar.getInstance().time)
+        if (days!!.split(" ").toTypedArray()[7] != nowDate) {
+            editD.putInt("Rating", 0)
+        }
+        editD.apply()
+
         try {
             val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (cm.activeNetworkInfo!!.isConnected){
+            if (cm.activeNetworkInfo!!.isConnected) {
                 forUpdate()
             }
-        } catch (e: java.lang.NullPointerException){
-            AlertDialog.Builder(this).setMessage("Подключитесь к интернету").setCancelable(false).setPositiveButton("Ок", DialogInterface.OnClickListener { dialog, which ->
-                this.finishAffinity()
-            }).show()
+        } catch (e: java.lang.NullPointerException) {
+            AlertDialog.Builder(this).setMessage("Подключитесь к интернету").setCancelable(false)
+                .setPositiveButton("Ок", DialogInterface.OnClickListener { dialog, which ->
+                    this.finishAffinity()
+                }).show()
         }
+
+        val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
+
+        val editor = sharPref.edit()
+        thread {
+            if (sharPref.getInt("id", 0) == 0) {
+                val idSite = Jsoup.connect("https://earmem.herokuapp.com/")
+                    .data("to", "percentCheck").get()
+                val id = idSite.select("td").first()?.text()!!.toInt() + 1
+
+                editor.putInt("id", id)
+                editor.apply()
+            }
+        }
+        editor.apply()
 
         val error = getSharedPreferences("error", Context.MODE_PRIVATE).getString("appError", "")
 
-        if (error != ""){
-            AlertDialog.Builder(this).setTitle("В прошлой сессии произошла ошибка").setMessage("Отправить отчёт об ошибке разработчикам?").setCancelable(false)
+        if (error != "") {
+            AlertDialog.Builder(this).setTitle("В прошлой сессии произошла ошибка")
+                .setMessage("Отправить отчёт об ошибке разработчикам?").setCancelable(false)
                 .setPositiveButton("Да", DialogInterface.OnClickListener { dialog, which ->
                     thread {
                         Jsoup.connect("https://earmem.herokuapp.com/")
@@ -249,9 +275,11 @@ class MainActivity : AppCompatActivity() {
         var n = similar(text, num!!)
 
         val spannableStringBuilder = SpannableStringBuilder()
+        var acceptedWrods = 0
 
         for (i in text.uppercase().toWords()){
             if (f4.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                acceptedWrods++
                 spannableStringBuilder.append("$i ")
                 spannableStringBuilder.setSpan(
                     ForegroundColorSpan(Color.GREEN), // color
@@ -259,47 +287,26 @@ class MainActivity : AppCompatActivity() {
                     spannableStringBuilder.length, // end here
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE // choose your flag
                 )
-            } else if (checker.uppercase().toWords().indexOf(i) > -1) {
-                spannableStringBuilder.append("$i ")
-                spannableStringBuilder.setSpan(
-                    ForegroundColorSpan(Color.GRAY), // color
-                    spannableStringBuilder.length - i.length - 1, // start color from here
-                    spannableStringBuilder.length, // end here
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
-                )
             } else if (f3.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                acceptedWrods++
                 spannableStringBuilder.append("$i ")
                 spannableStringBuilder.setSpan(
                     ForegroundColorSpan(Color.GREEN), // color
-                    spannableStringBuilder.length - i.length - 1, // start color from here
-                    spannableStringBuilder.length, // end here
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
-                )
-            } else if (checker.uppercase().toWords().indexOf(i) > -1) {
-                spannableStringBuilder.append("$i ")
-                spannableStringBuilder.setSpan(
-                    ForegroundColorSpan(Color.GRAY), // color
                     spannableStringBuilder.length - i.length - 1, // start color from here
                     spannableStringBuilder.length, // end here
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
                 )
             } else if (f2.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                acceptedWrods++
                 spannableStringBuilder.append("$i ")
                 spannableStringBuilder.setSpan(
                     ForegroundColorSpan(Color.GREEN), // color
-                    spannableStringBuilder.length - i.length - 1, // start color from here
-                    spannableStringBuilder.length, // end here
-                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
-                )
-            } else if (checker.uppercase().toWords().indexOf(i) > -1) {
-                spannableStringBuilder.append("$i ")
-                spannableStringBuilder.setSpan(
-                    ForegroundColorSpan(Color.GRAY), // color
                     spannableStringBuilder.length - i.length - 1, // start color from here
                     spannableStringBuilder.length, // end here
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
                 )
             } else if (f1.indexOf(i) > -1 && checker.uppercase().toWords().indexOf(i) > -1){
+                acceptedWrods++
                 spannableStringBuilder.append("$i ")
                 spannableStringBuilder.setSpan(
                     ForegroundColorSpan(Color.GREEN), // color
@@ -308,6 +315,7 @@ class MainActivity : AppCompatActivity() {
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE // choose your flag
                 )
             } else if (checker.uppercase().toWords().indexOf(i) > -1) {
+                acceptedWrods++
                 spannableStringBuilder.append("$i ")
                 spannableStringBuilder.setSpan(
                     ForegroundColorSpan(Color.GRAY), // color
@@ -326,16 +334,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val editor = sharPref.edit()
+        if (sharPref.getString("write$num", "") != "000") {
+            editor.putString("write$num", "000")
+            val percentage =
+                (acceptedWrods / checker.uppercase().toWords().toTypedArray().size) * 100
+
+            thread {
+                Jsoup.connect("https://earmem.herokuapp.com/")
+                    .data("to", "percentage")
+                    .data("id", sharPref.getInt("id", 0).toString())
+                    .data("level", "write$num")
+                    .data("percent", "$percentage").get()
+            }
+        }
+
         findViewById<EditText>(R.id.editTextHeared).text = spannableStringBuilder
 
-        if (n > 0){
+        if (n > 0) {
             Toast.makeText(cont, "Ты сделал на $n баллов", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(cont, "Ты сделал на 0 баллов", Toast.LENGTH_SHORT).show()
         }
 
-        val editor = sharPref.edit()
-        if (n>10) {
+        if (n > 10) {
             if (sharPref.getInt("maxHearedLevel",1) == num) {
                 editor?.putInt("maxHearedLevel", num + 1)
             }
@@ -435,10 +457,14 @@ class MainActivity : AppCompatActivity() {
 
     // возвращение к главному экрану
     fun back(view: View?) {
-        supportFragmentManager.beginTransaction().replace(R.id.mainFragment, StartFragment.newInsance()).commit()
-        if (mMediaPlayer?.isPlaying == true){
-            mMediaPlayer?.release()!!
-            mMediaPlayer = null
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.mainFragment, StartFragment.newInsance()).commit()
+        try {
+            if (mMediaPlayer?.isPlaying == true) {
+                mMediaPlayer?.release()!!
+                mMediaPlayer = null
+            }
+        } catch (e: java.lang.IllegalStateException) {
         }
     }
 
