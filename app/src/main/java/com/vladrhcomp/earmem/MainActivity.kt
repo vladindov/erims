@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_screen)
 
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
+
         val days = getSharedPreferences("level", Context.MODE_PRIVATE).getString(
             "Days",
             "0 0 0 0 0 0 0 11,11"
@@ -56,10 +58,17 @@ class MainActivity : AppCompatActivity() {
                 forUpdate()
             }
         } catch (e: java.lang.NullPointerException) {
-            AlertDialog.Builder(this).setMessage("Подключитесь к интернету").setCancelable(false)
-                .setPositiveButton("Ок", DialogInterface.OnClickListener { dialog, which ->
-                    this.finishAffinity()
-                }).show()
+            if (language == "RU")
+                AlertDialog.Builder(this).setMessage("Подключитесь к интернету")
+                    .setCancelable(false)
+                    .setPositiveButton("Ок", DialogInterface.OnClickListener { dialog, which ->
+                        this.finishAffinity()
+                    }).show()
+            else if (language == "US")
+                AlertDialog.Builder(this).setMessage("Connect to internet").setCancelable(false)
+                    .setPositiveButton("Ок", DialogInterface.OnClickListener { dialog, which ->
+                        this.finishAffinity()
+                    }).show()
         }
 
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
@@ -80,18 +89,31 @@ class MainActivity : AppCompatActivity() {
         val error = getSharedPreferences("error", Context.MODE_PRIVATE).getString("appError", "")
 
         if (error != "") {
-            AlertDialog.Builder(this).setTitle("В прошлой сессии произошла ошибка")
-                .setMessage("Отправить отчёт об ошибке разработчикам?").setCancelable(false)
-                .setPositiveButton("Да", DialogInterface.OnClickListener { dialog, which ->
-                    thread {
-                        Jsoup.connect("https://earmem.herokuapp.com/")
-                            .data("to", "errors")
-                            .data("error", error!!)
-                            .get()
-                    }
-                }).setNegativeButton("Нет", null).show()
+            if (language == "RU")
+                AlertDialog.Builder(this).setTitle("В прошлой сессии произошла ошибка")
+                    .setMessage("Отправить отчёт об ошибке разработчикам?").setCancelable(false)
+                    .setPositiveButton("Да", DialogInterface.OnClickListener { dialog, which ->
+                        thread {
+                            Jsoup.connect("https://earmem.herokuapp.com/")
+                                .data("to", "errors")
+                                .data("error", error!!)
+                                .get()
+                        }
+                    }).setNegativeButton("Нет", null).show()
+            else if (language == "US")
+                AlertDialog.Builder(this).setTitle("An error occurred in the last session")
+                    .setMessage("Send a bug report to developers?").setCancelable(false)
+                    .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, which ->
+                        thread {
+                            Jsoup.connect("https://earmem.herokuapp.com/")
+                                .data("to", "errors")
+                                .data("error", error!!)
+                                .get()
+                        }
+                    }).setNegativeButton("No", null).show()
 
-            getSharedPreferences("error", Context.MODE_PRIVATE).edit().putString("appError", "").apply()
+            getSharedPreferences("error", Context.MODE_PRIVATE).edit().putString("appError", "")
+                .apply()
         }
 
         Thread.setDefaultUncaughtExceptionHandler { paramThread, paramThrowable ->
@@ -167,16 +189,26 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.navigation_dashboard -> {
-                    back(findViewById<BottomNavigationView>(R.id.navigation_view))
+                    if (language == "US")
+                        return@setOnItemSelectedListener false
+                    else if (language == "RU") {
+                        back(findViewById<BottomNavigationView>(R.id.navigation_view))
 
-                    findViewById<FragmentContainerView>(R.id.ratingContainer).visibility = View.VISIBLE
-                    findViewById<FragmentContainerView>(R.id.mainFragment).visibility = View.GONE
-                    supportFragmentManager.beginTransaction().replace(R.id.ratingContainer, ChatFragment.newInsance()).commit()
+                        findViewById<FragmentContainerView>(R.id.ratingContainer).visibility =
+                            View.VISIBLE
+                        findViewById<FragmentContainerView>(R.id.mainFragment).visibility =
+                            View.GONE
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.ratingContainer, ChatFragment.newInsance()).commit()
 
-                    return@setOnItemSelectedListener true
+                        return@setOnItemSelectedListener true
+                    }
                 }
                 R.id.navigation_notifications -> {
-                    Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Will be added later", Toast.LENGTH_SHORT).show()
                 }
                 R.id.navigation_stat -> {
                     back(findViewById<BottomNavigationView>(R.id.navigation_view))
@@ -211,61 +243,157 @@ class MainActivity : AppCompatActivity() {
         var m1 = ""
         val sharPref = cont.getSharedPreferences("level", Context.MODE_PRIVATE)
         val num = sharPref?.getInt("levelNum", 0)
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
 
-        when (num) {
-            1 -> {
-                checker =
-                    "53 года назад. Услыхав свое имя, помесь такса с дворняжкой вышла из-под верстака, где она спала на стружках, сладко потянулась и побежала за хозяином. Заказчики Луки Александрыча жили ужасно далеко, так что, прежде чем дойти до каждого из них, столяр должен был по нескольку раз заходить в трактир и подкрепляться. Каштанка помнила, что по дороге она вела себя крайне неприлично"
-                m4 =
-                    "53 года назад, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, Трактир, Столяр, Она спала, Стружки, Стружках, Заказчики Луки".uppercase()
-                m3 =
-                    "53 года назад, Помесь такса, Помесь таксы, Заказчики Луки, Каштанка, Коштанка, Трактир, Столяр, Спала".uppercase()
-                m2 = "53 года назад, заказчики Луки, Каштанка, Коштанка, столяр, спала".uppercase()
-                m1 = "53 года, Луки, Каштанка, Коштанка".uppercase()
+        if (language == "RU")
+            when (num) {
+                1 -> {
+                    checker =
+                        "53 года назад. Услыхав свое имя, помесь такса с дворняжкой вышла из-под верстака, где она спала на стружках, сладко потянулась и побежала за хозяином." +
+                                " Заказчики Луки Александрыча жили ужасно далеко, так что, прежде чем дойти до каждого из них, столяр должен был по нескольку раз заходить" +
+                                " в трактир и подкрепляться. Каштанка помнила, что по дороге она вела себя крайне неприлично"
+                    m4 =
+                        "53 года назад, Помесь такса с дворняжкой, Помесь таксы с дворняжкой, Каштанка, Коштанка, Трактир, Столяр, Она спала, Стружки, Стружках, Заказчики Луки".uppercase()
+                    m3 =
+                        "53 года назад, Помесь такса, Помесь таксы, Заказчики Луки, Каштанка, Коштанка, Трактир, Столяр, Спала".uppercase()
+                    m2 =
+                        "53 года назад, заказчики Луки, Каштанка, Коштанка, столяр, спала".uppercase()
+                    m1 = "53 года, Луки, Каштанка, Коштанка".uppercase()
+                }
+                2 -> {
+                    checker =
+                        "Тема свободного человека – главная тема всего произведения, но в легенде о Данко она рассматривается в неожиданном ракурсе," +
+                                " Для писателя понятие \"свобода\" связано с понятием \"правда\" и \"подвиг\", Горького интересует не \"свобода\" \"от чего-либо\"," +
+                                " а свобода \"во имя\". Горький использует жанр литературной легенды, потому что он, как нельзя лучше, подходил для его замысла:" +
+                                " кратко, взволновано, ярко воспеть все лучшее, что может быть в человеке. Более всего писатель негодовал против эгоизма, корыстолюбия," +
+                                " самолюбования и гордыни"
+                    m4 =
+                        "свободного человека, главная тема, произведения, Данко, неожиданном ракурсе, \"свобода\", \"правда\" и \"подвиг\", свобода \"во имя\"," +
+                                " Горький, жанр литературной легенды, кратко, взволновано, ярко воспеть все лучшее".uppercase()
+                    m3 =
+                        "воспеть все лучшее, воспеть всё лучшее, негодовал против эгоизма".uppercase()
+                    m2 = "тема всего произведения, негодовал, против эгоизма".uppercase()
+                    m1 = "свободного, человека, против, эгоизма".uppercase()
+                }
+                3 -> {
+                    checker =
+                        "Как раз в то время, когда почтальон с письмом поднимался по лестнице, у Чука с Геком был бой. Короче говоря," +
+                                " они просто выли и дрались. Из-за чего началась эта драка, я уже позабыл. Но помнится мне, что или Чук стащил у" +
+                                " Гека пустую спичечную коробку, или, наоборот, Гек стянул у Чука жестянку из-под ваксы. \n" +
+                                "Только что оба эти брата, стукнув по разу друг друга кулаками, собирались стукнуть по второму," +
+                                " как загремел звонок, и они с тревогой переглянулись. Они подумали, что пришла их мама! А у этой мамы был странный характер." +
+                                " Она не ругалась за драку, не кричала, а просто разводила драчунов по разным комнатам и целый час, а то и два не позволяла им играть вместе." +
+                                " А в одном часе – тик да так – целых шестьдесят минут. А в двух часах и того больше"
+                    m4 =
+                        "почтальон с письмом, поднимался, лестнице, у Чука с Геком был бой, выли и дрались, Гек стянул у Чука жестянку из-под, стукнуть второй," +
+                                " с тревогой переглянулись, мама, странный характер, не ругалась, разводила драчунов по разным комнатам, играть вместе, целых шестьдесят минут".uppercase()
+                    m3 =
+                        "дрались, стащил спичечную коробку или стянул жестяную банку, второй, переглянулись, не ругалась".uppercase()
+                    m2 = "Почтальон, письмом, лестнице, бой, разводила драчунов".uppercase()
+                    m1 = "спичечную коробку, стукнуть, характер".uppercase()
+                }
+                4 -> {
+                    checker =
+                        "Во время моих посещений нью-йоркского рынка — мой отец и я в это время имели целый ряд" +
+                                " небольших магазинов в Виргинии. Капитан Картер владел маленьким, но красивым коттеджем, расположенным на возвышенности," +
+                                " с хорошим видом на реку. Во время одного из моих посещений я заметил, что он был очень занят писанием.\n" +
+                                "Тогда же он сказал мне, что в случае какого-нибудь с ним несчастья, он хотел бы, чтоб я распорядился его имуществом;" +
+                                " он дал мне ключ от шкафа в его кабинете, где я найду завещание и некоторые указания, которыми он просил меня выполнить с точностью."
+                    m4 =
+                        "нью-йоркского рынка, мой отец и я, магазинов, капитан, маленьким, красивым коттеджем, занят писанием, несчастья, распорядился, имуществом, ключ от шкафа, " +
+                                "завещание, указания, выполнить с точностью".uppercase()
+                    m3 = "".uppercase()
+                    m2 = "рынка, коттеджем".uppercase()
+                    m1 = "".uppercase()
+                }
+                5 -> {
+                    checker =
+                        "Настасья сиротой росла, не привыкла к такому богатству, да и не шибко любительница была моду выводить," +
+                                " С первых годов, как жили со Степаном, надевывала, конечно, из этой шкатулки, Только не к душе ей пришлось," +
+                                " Наденет кольцо, Ровно как раз впору, Но закованный палец-то, в конце нали посинеет, Серьги навесит - хуже того," +
+                                " Уши так оттянет, что мочки распухнут, А на руки взять - не тяжелее тех, какие Настасья всегда носила"
+                    m4 =
+                        ("сиротой, росла, не привыкла, богатству, моду, Степаном, шкатулки, не к душе, кольцо, впору, закованный, серьги, уши, мочки, распухнут, " +
+                                "не тяжелее, Настасья, носила").uppercase()
+                    m3 = "".uppercase()
+                    m2 = "".uppercase()
+                    m1 = "".uppercase()
+                }
             }
-            2 -> {
-                checker =
-                    "Тема свободного человека – главная тема всего произведения, но в легенде о Данко она рассматривается в неожиданном ракурсе, Для писателя понятие \"свобода\" связано с понятием \"правда\" и \"подвиг\", Горького интересует не \"свобода\" \"от чего-либо\", а свобода \"во имя\". Горький использует жанр литературной легенды, потому что он, как нельзя лучше, подходил для его замысла: кратко, взволновано, ярко воспеть все лучшее, что может быть в человеке. Более всего писатель негодовал против эгоизма, корыстолюбия, самолюбования и гордыни"
-                m4 =
-                    "свободный человек, главная тема произведения, Данко, неожиданный ракурс, свобода - подвиг и правда, \"свобода во имя\" Горький , жанр литературная легенда, кратко, ярко и взволнованно воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
-                m3 =
-                    "свободный человек, главная тема произведения, Данко, свобода - подвиг и правда, \"свобода во имя\" Горький, жанр литературная легенда воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
-                m2 = "свободный человек, тема произведения  свобода - подвиг и правда, \"свобода во имя\" Горький, воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
-                m1 = "свободный человек, \"свобода во имя\" Горький, воспеть хорошее в человеке, негодовал против эгоизма".uppercase()
+        if (language == "US")
+            when (num) {
+                1 -> {
+                    checker =
+                        "53 years ago. Hearing her name, a cross between a dachshund and a mongrel came out from under the workbench where" +
+                                " she was sleeping on shavings, stretched sweetly and ran after the owner. Luka Alexandrycha's customers lived" +
+                                " terribly far away, so before reaching each of them, the joiner had to go into the tavern several times and" +
+                                " refresh himself. Kashtanka remembered that on the way she behaved extremely indecently."
+                    m4 =
+                        "53 years ago, a cross between a dachshund and a mongrel, Kashtanka, tavern, joiner, she was sleeping, shavings, Luka Alexandrycha's customers".uppercase()
+                    m3 =
+                        "53 years ago, a cross between a dachshund, Luka Alexandrycha's customers, Kashtanka, tavern, joiner, sleeping".uppercase()
+                    m2 =
+                        "53 years ago, Luka Alexandrycha's customers, Kashtanka, joiner, sleeping".uppercase()
+                    m1 = "53 years, Luka, Kashtanka".uppercase()
+                }
+                2 -> {
+                    checker =
+                        "The theme of a free man is the main theme of the whole work, but in the legend of Danko it is viewed from an unexpected" +
+                                " angle. For the writer, the concept of \"freedom\" is connected with the concept of \"truth\" and \"feat\"." +
+                                " Gorky is not interested in \"freedom\" \"from anything\", but freedom \"in the name of\". Gorky uses the genre" +
+                                " of literary legend, because it could not be better suited to his idea: briefly, excitedly, vividly sing all the" +
+                                " best that can be in a person. Most of all, the writer was indignant against selfishness, greed, self-love and pride."
+                    m4 =
+                        "free man, the main theme of the whole work, Danko, unexpected angle, \"freedom\" is connected with the concept of \"truth\" and \"feat\"," +
+                                " freedom \"in the name of\", Gorky, genre of literary legend, briefly, vividly sing all the best, indignant against selfishness".uppercase()
+                    m3 = "sing all the best, indignant against selfishness".uppercase()
+                    m2 = "main theme of the whole work, indignant, against selfishness".uppercase()
+                    m1 = "free, man, against, selfishness".uppercase()
+                }
+                3 -> {
+                    checker =
+                        "Just at the time when the postman was coming up the stairs with the letter, Chuck and Huck had a fight. In short, they were just howling and fighting." +
+                                " I've already forgotten what this fight started about. But I remember that either Chuck stole an empty matchbox from Huck, or, conversely," +
+                                " Huck stole a tin can from Chuck. Just now, both of these brothers, having hit each other once with their fists, were about to hit the second" +
+                                " one, when the bell rang, and they looked at each other anxiously. They thought their mom had come! And this mom had a strange character." +
+                                " She did not swear at the fight, did not shout, but simply bred the brawlers in different rooms and did not allow them to play together " +
+                                "for an hour or even two. And in one hour – tick and tock – as much as sixty minutes. And two hours and even more"
+                    m4 =
+                        "with the letter, coming up, the stairs, Chuck and Huck had a fight, howling and fighting, Huck stole a tin can from Chuck, hit the second," +
+                                " looked at each other anxiously, mom, strange character, did not shout, bred the brawlers in different rooms, play together, as much as sixty minutes".uppercase()
+                    m3 =
+                        "fighting, stole an empty matchbox from Huck or conversely, second, looked at each other, did not shout".uppercase()
+                    m2 = "postman, the letter, a fight, bred the brawlers".uppercase()
+                    m1 = "matchbox, hit, character".uppercase()
+                }
+                4 -> {
+                    checker =
+                        "During my visits to the New York market - my father and I had a number of small shops in Virginia. Captain Carter owned a small but beautiful cottage," +
+                                " located on a hill, with a good view of the river. During one of my visits, I noticed that he was very busy writing. At the same time he told me that" +
+                                " in case of any misfortune with him, he would like me to dispose of his property; he gave me the key to the closet in his office, where I would find" +
+                                " the will and some instructions that he asked me to follow with accuracy."
+                    m4 =
+                        "New York market, my father and I, shops, Captain, small, beautiful cottage, was very busy writing, misfortune, to dispose, property, key to the closet, " +
+                                "the will, some instructions, follow with accuracy".uppercase()
+                    m3 = "".uppercase()
+                    m2 = "market, cottage".uppercase()
+                    m1 = "".uppercase()
+                }
+                5 -> {
+                    checker =
+                        "Listing the things I transported from the ship, as already mentioned, in eleven receptions, I did not mention many little things. For example," +
+                                " in the cabins of the captain and his assistant, I found ink, did not mention many little, three or four compasses, some astronomical instruments," +
+                                " telescopes, geographical maps and a ship's log. I put all this in one of the trunks just in case, not even knowing if I would need any" +
+                                " of these things. Then I came across several books in Portuguese. I picked them up, too."
+                    m4 =
+                        ("the things I transported, as already mentioned, I did not mention many little things, in the cabins of the captain and his assistant," +
+                                " I found ink, pens and paper, three or four compasses, I put all this in one of the trunks, I came across several books in Portuguese").uppercase()
+                    m3 = "".uppercase()
+                    m2 =
+                        "Listing the things, already mentioned, did not mention many little, did not mention many little, one of the trunks".uppercase()
+                    m1 = "".uppercase()
+                }
             }
-            3 -> {
-                checker =
-                    "Как раз в то время, когда почтальон с письмом поднимался по лестнице, у Чука с Геком был бой. Короче говоря, они просто выли и дрались. Из-за чего началась эта драка, я уже позабыл. Но помнится мне, что или Чук стащил у Гека пустую спичечную коробку, или, наоборот, Гек стянул у Чука жестянку из-под ваксы. \n" +
-                            "Только что оба эти брата, стукнув по разу друг друга кулаками, собирались стукнуть по второму, как загремел звонок, и они с тревогой переглянулись. Они подумали, что пришла их мама! А у этой мамы был странный характер. Она не ругалась за драку, не кричала, а просто разводила драчунов по разным комнатам и целый час, а то и два не позволяла им играть вместе. А в одном часе – тик да так – целых шестьдесят минут. А в двух часах и того больше"
-                m4 =
-                    "Почтальон с письмами, поднимался, лестница, у Чука с Геком был бой, дрались и выли, Чук спичечную коробку или Гек жестяную банку, стукнули по разу, стукнуть второй, с тревогой переглянулись, мама, характер странный, не ругалась, разводила по комнатам и не позволяла, играть вместе, час - шестьдесят минут".uppercase()
-                m3 =
-                    "Почтальон с письмами, поднимался, лестница, у Чука с Геком был бой, дрались, стащил спичечную коробку или стянул жестяную банку, стукнули по разу, второй, переглянулись, мама, характер странный, не ругалась, разводила по комнатам и не позволяла, играть вместе".uppercase()
-                m2 = "Почтальон, письма, лестница, бой, стащил спичечную коробку или стянул жестяную банку, стукнули по разу, второй, мама, характер странный, разводила по комнатам, играть вместе".uppercase()
-                m1 = "Почтальон, лестница, бой, спичечная коробка, стукнуть, мама, характер, играть вместе".uppercase()
-            }
-            4 -> {
-                checker =
-                    "Во время моих посещений нью-йоркского рынка — мой отец и я в это время имели целый ряд небольших магазинов в Виргинии. Капитан Картер владел маленьким, но красивым коттеджем, расположенным на возвышенности, с хорошим видом на реку. Во время одного из моих посещений я заметил, что он был очень занят писанием.\n" +
-                            "Тогда же он сказал мне, что в случае какого-нибудь с ним несчастья, он хотел бы, чтоб я распорядился его имуществом; он дал мне ключ от шкафа в его кабинете, где я найду завещание и некоторые указания, которыми он просил меня выполнить с точностью."
-                m4 =
-                    "Нью-Йоркский Рынок, я и мой отец, магазины, капитан, маленький, красивый коттедж, занят писанием, несчастье, распорядился, имущество, ключ от шкафа, завещание, указания, выполнить с точностью".uppercase()
-                m3 =
-                    "Нью-Йоркский Рынок, я и мой отец, магазины, маленький, красивый коттедж, занят писанием, несчастье, распорядился, имущество, ключ от шкафа, завещание".uppercase()
-                m2 = "Рынок, я и мой отец, магазины, коттедж, занят писанием, несчастье, имущество, ключ от шкафа, завещание".uppercase()
-                m1 = "Рынок, магазины, коттедж, занят писанием, имущество, завещание".uppercase()
-            }
-            5 -> {
-                checker =
-                    "Настасья сиротой росла, не привыкла к такому богатству, да и не шибко любительница была моду выводить, С первых годов, как жили со Степаном, надевывала, конечно, из этой шкатулки, Только не к душе ей пришлось, Наденет кольцо, Ровно как раз впору, Но закованный палец-то, в конце нали посинеет, Серьги навесит - хуже того, Уши так оттянет, что мочки распухнут, А на руки взять - не тяжелее тех, какие Настасья всегда носила"
-                m4 =
-                    "Сирота, росла, не привыкла, богатство, мода, Степан, шкатулка, не к душе, кольцо, впору, закованный, серьги, уши, мочки, распухнут, не тяжелее, Настасья, носила".uppercase()
-                m3 =
-                    "Сирота, росла, не привыкла, богатство, мода, Степан, шкатулка, кольцо, впору, закованный, серьги, уши, мочки, Настасья".uppercase()
-                m2 = "Сирота, росла, богатство, мода, шкатулка, кольцо, впору, закованный, серьги, уши, мочки, Настасья".uppercase()
-                m1 = "Сирота, богатство, мода, шкатулка, кольцо, серьги, уши, Настасья".uppercase()
-            }
-        }
 
         val f4 = m4.replace(Regex("""[,]"""), "").split(" ")
         val f3 = m3.replace(Regex("""[,]"""), "").split(" ")
@@ -352,9 +480,15 @@ class MainActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.editTextHeared).text = spannableStringBuilder
 
         if (n > 0) {
-            Toast.makeText(cont, "Ты сделал на $n баллов", Toast.LENGTH_SHORT).show()
+            if (language == "RU")
+                Toast.makeText(cont, "Ты сделал на $n баллов", Toast.LENGTH_SHORT).show()
+            else if (language == "US")
+                Toast.makeText(cont, "You did $n points", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(cont, "Ты сделал на 0 баллов", Toast.LENGTH_SHORT).show()
+            if (language == "RU")
+                Toast.makeText(cont, "Ты сделал на 0 баллов", Toast.LENGTH_SHORT).show()
+            else if (language == "US")
+                Toast.makeText(cont, "You did 0 points", Toast.LENGTH_SHORT).show()
         }
 
         if (n > 10) {
@@ -365,52 +499,87 @@ class MainActivity : AppCompatActivity() {
             editor?.apply()
         }
 
-        findViewById<Button>(R.id.hearedButton).text = "На главную"
+        findViewById<Button>(R.id.hearedButton).text = "To home page"
         findViewById<Button>(R.id.hearedButton).setOnClickListener {
             back(it)
         }
     }
 
     // запускает нужное аудио
-    fun Play(view: View){
+    fun Play(view: View) {
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
         val num = sharPref.getInt("levelNum", 1)
         val b = findViewById<ImageButton>(R.id.imageButtonHeared)
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
 
         if (mMediaPlayer?.isPlaying == true) return mMediaPlayer?.pause()!!
 
-        when(num){
-            1 -> {
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.uroven1_chisto)
-                    mMediaPlayer!!.start()
+        if (language == "RU")
+            when (num) {
+                1 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven1_chisto_ru)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                2 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven2_chisto_ru)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                3 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven3_chisto_ru)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                4 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven4_chisto_ru)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                5 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven5_chisto_ru)
+                        mMediaPlayer!!.start()
+                    }
                 }
             }
-            2 -> {
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.uroven2_chisto)
-                    mMediaPlayer!!.start()
+        if (language == "US")
+            when (num) {
+                1 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven1_chisto_us)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                2 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven2_chisto_us)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                3 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven3_chisto_us)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                4 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven4_chisto_us)
+                        mMediaPlayer!!.start()
+                    }
+                }
+                5 -> {
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.uroven5_chisto_us)
+                        mMediaPlayer!!.start()
+                    }
                 }
             }
-            3 -> {
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.uroven3_chisto)
-                    mMediaPlayer!!.start()
-                }
-            }
-            4 -> {
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.uroven4_chisto)
-                    mMediaPlayer!!.start()
-                }
-            }
-            5 -> {
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.uroven5_chisto)
-                    mMediaPlayer!!.start()
-                }
-            }
-        }
         b.visibility = View.INVISIBLE
         thread {
             try {
@@ -437,21 +606,27 @@ class MainActivity : AppCompatActivity() {
     fun playRepeat(view: View){
         val numb = resources.getResourceName(view.id)
         val num = numb.substring(numb.lastIndexOf('/') + 1).replace("imageButtonHearedLevel", "").toInt()
-        val podpiska = view.context.getSharedPreferences("val", Context.MODE_PRIVATE).getInt("podpiska", 0)
+        val podpiska =
+            view.context.getSharedPreferences("val", Context.MODE_PRIVATE).getInt("podpiska", 0)
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
 
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE)
         val editor = sharPref.edit()
         editor.putInt("levelNum", num)
         val max = sharPref.getInt("maxHearedLevel",1)
 
-        if (num in 1..max){
+        if (num in 1..max) {
             if ((num == 1 && podpiska == 0) || podpiska == 1)
-                supportFragmentManager.beginTransaction().replace(R.id.mainFragment, HearedFragment.newInsance()).commit()
-            else
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.mainFragment, HearedFragment.newInsance()).commit()
+            else if (language == "RU")
                 Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
-        }else{
+            else if (language == "US")
+                Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT).show()
+        } else if (language == "RU")
             Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
-        }
+        else if (language == "US")
+            Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT).show()
         editor.apply()
     }
 
@@ -480,6 +655,7 @@ class MainActivity : AppCompatActivity() {
         val sharPref = getSharedPreferences("level", Context.MODE_PRIVATE).edit()
         val max = getSharedPreferences("level", Context.MODE_PRIVATE).getInt("maxWhatItLevel", 1)
         val podpiska = getSharedPreferences("val", Context.MODE_PRIVATE).getInt("podpiska", 0)
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
 
         when(level.toString()){
             "1" -> {
@@ -505,7 +681,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 } else {
-                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT)
+                            .show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
             "5" -> {
@@ -513,7 +694,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 } else {
-                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT)
+                            .show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
             "6" -> {
@@ -521,7 +707,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 } else {
-                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT)
+                            .show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
             "7" -> {
@@ -529,7 +720,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 } else {
-                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT)
+                            .show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
             "8" -> {
@@ -537,7 +733,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 } else {
-                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT)
+                            .show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
             "9" -> {
@@ -545,7 +746,12 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 } else {
-                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT)
+                            .show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
             "10" -> {
@@ -553,20 +759,32 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.mainFragment, WhatItFragment.newInsance()).commit()
                 } else {
-                    Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+                    if (language == "RU")
+                        Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT)
+                            .show()
+                    else if (language == "US")
+                        Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
         }
-        if(level>max){
-            Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+        if(level>max) {
+            if (language == "RU")
+                Toast.makeText(this, "Недоступно для вашего аккаунта", Toast.LENGTH_SHORT).show()
+            else if (language == "US")
+                Toast.makeText(this, "Unavailable for your account", Toast.LENGTH_SHORT).show()
         }
         sharPref.putInt("whatItLevel", level)
         sharPref.apply()
     }
 
     // на всём, чего нет))
-    fun GoodBye(view: View){
-        Toast.makeText(this,"Будет добавлено позже",Toast.LENGTH_SHORT).show()
+    fun GoodBye(view: View) {
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
+        if (language == "RU")
+            Toast.makeText(this, "Будет добавлено позже", Toast.LENGTH_SHORT).show()
+        else if (language == "US")
+            Toast.makeText(this, "Will be added later", Toast.LENGTH_SHORT).show()
     }
 
     // уход в "напишите услышанное"
@@ -799,21 +1017,6 @@ class MainActivity : AppCompatActivity() {
                 break
             }
         }
-        Toast.makeText(
-            this,
-            getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatit1", 10000).toString(),
-            Toast.LENGTH_SHORT
-        ).show()
-        Toast.makeText(
-            this,
-            getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatit2", 10000).toString(),
-            Toast.LENGTH_SHORT
-        ).show()
-        Toast.makeText(
-            this,
-            getSharedPreferences("level", Context.MODE_PRIVATE).getInt("whatit3", 10000).toString(),
-            Toast.LENGTH_SHORT
-        ).show()
         thread {
             if (writes == 0) writes = -5
             if (heareds == 0) heareds = -5
@@ -832,23 +1035,37 @@ class MainActivity : AppCompatActivity() {
 
     fun forUpdate(){
         val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
         if (cm.activeNetworkInfo!!.isConnected) {
             thread {
                 val ver =
                     Jsoup.connect("https://earmem.herokuapp.com/").get().select("p").text().trim()
                 if (ver != BuildConfig.VERSION_NAME) {
                     runOnUiThread {
-                        AlertDialog.Builder(this).setCancelable(false)
-                            .setMessage("Обновите приложение!!!")
-                            .setPositiveButton(
-                                "Перейти к скачиванию",
-                                DialogInterface.OnClickListener { dialog, which ->
-                                    val browserIntent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("http://earmem.ru/#app")
-                                    )
-                                    startActivity(browserIntent)
-                                }).show()
+                        if (language == "RU")
+                            AlertDialog.Builder(this).setCancelable(false)
+                                .setMessage("Обновите приложение!!!")
+                                .setPositiveButton(
+                                    "Перейти к скачиванию",
+                                    DialogInterface.OnClickListener { dialog, which ->
+                                        val browserIntent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("http://earmem.ru/#app")
+                                        )
+                                        startActivity(browserIntent)
+                                    }).show()
+                        else if (language == "US")
+                            AlertDialog.Builder(this).setCancelable(false)
+                                .setMessage("Update the app!!!")
+                                .setPositiveButton(
+                                    "Go to download",
+                                    DialogInterface.OnClickListener { dialog, which ->
+                                        val browserIntent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("http://earmem.ru/#app")
+                                        )
+                                        startActivity(browserIntent)
+                                    }).show()
                     }
                 }
             }
@@ -954,34 +1171,122 @@ class MainActivity : AppCompatActivity() {
     }
 
     //про версию купить
-    fun proVer(view: View){
+    fun proVer(view: View) {
         val v = this.layoutInflater.inflate(R.layout.pro_code, null)
+        val language = getSharedPreferences("app", Context.MODE_PRIVATE).getString("language", "RU")
 
-        AlertDialog.Builder(this).setMessage("Хотите купить подписку?")
-            .setPositiveButton("Да (сайт оплаты)", DialogInterface.OnClickListener { dialog, which ->
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://earmem.ru/#podpiska"))
-                startActivity(browserIntent)
-            })
-            .setNegativeButton("У меня уже есть код", DialogInterface.OnClickListener { dialog, which ->
-                AlertDialog.Builder(this).setView(v)
-                    .setPositiveButton("Активировать",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            val code = v.findViewById<EditText>(R.id.codeEdit).text.toString()
-                            val codes:Array<String> = arrayOf("O4pK06gAVZ0s", "zK32jt9CIjeb", "0xCg18PbUQl9", "53Ed1zv97cZS", "Z9ak670XRtrp", "qK09LMv4q1Ep", "U48HCrT1Abn2", "a8R00905Naii", "mL6043m0rkGs", "J90t76F8D98k", "7YT09gVopXlo", "40F7sX3vqrry", "zJ484qMdk3Zc", "RL64hHw26s2I", "8Es5IOZTZ0bH", "In3t34gG2HhE", "Tl9BD938HQQ7", "6nSf38Ne4aJZ", "XLn21jJ0C09i", "Bs436Ta3NXnm")
-                            if (code in codes){
-                                AlertDialog.Builder(this).setMessage("Вы успешно активировали подписку").setPositiveButton("Ок", null).show()
-                                getSharedPreferences("val", Context.MODE_PRIVATE).edit().putInt("podpiska", 1).apply()
-                            }
-                        })
-                    .setNegativeButton("Отмена",
-                        DialogInterface.OnClickListener { dialog, id ->
-                            dialog.cancel()
-                        }).show()
-            })
-            .setNeutralButton("Отмена", DialogInterface.OnClickListener { dialog, which ->
-                dialog.cancel()
-            })
-            .show()
+        if (language == "RU")
+            AlertDialog.Builder(this).setMessage("Хотите купить подписку?")
+                .setPositiveButton(
+                    "Да (сайт оплаты)",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        val browserIntent =
+                            Intent(Intent.ACTION_VIEW, Uri.parse("http://earmem.ru/#podpiska"))
+                        startActivity(browserIntent)
+                    })
+                .setNegativeButton(
+                    "У меня уже есть код",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        AlertDialog.Builder(this).setView(v)
+                            .setPositiveButton("Активировать",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    val code =
+                                        v.findViewById<EditText>(R.id.codeEdit).text.toString()
+                                    val codes: Array<String> = arrayOf(
+                                        "O4pK06gAVZ0s",
+                                        "zK32jt9CIjeb",
+                                        "0xCg18PbUQl9",
+                                        "53Ed1zv97cZS",
+                                        "Z9ak670XRtrp",
+                                        "qK09LMv4q1Ep",
+                                        "U48HCrT1Abn2",
+                                        "a8R00905Naii",
+                                        "mL6043m0rkGs",
+                                        "J90t76F8D98k",
+                                        "7YT09gVopXlo",
+                                        "40F7sX3vqrry",
+                                        "zJ484qMdk3Zc",
+                                        "RL64hHw26s2I",
+                                        "8Es5IOZTZ0bH",
+                                        "In3t34gG2HhE",
+                                        "Tl9BD938HQQ7",
+                                        "6nSf38Ne4aJZ",
+                                        "XLn21jJ0C09i",
+                                        "Bs436Ta3NXnm"
+                                    )
+                                    if (code in codes) {
+                                        AlertDialog.Builder(this)
+                                            .setMessage("Вы успешно активировали подписку")
+                                            .setPositiveButton("Ок", null).show()
+                                        getSharedPreferences("val", Context.MODE_PRIVATE).edit()
+                                            .putInt("podpiska", 1).apply()
+                                    }
+                                })
+                            .setNegativeButton("Отмена",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    dialog.cancel()
+                                }).show()
+                    })
+                .setNeutralButton("Отмена", DialogInterface.OnClickListener { dialog, which ->
+                    dialog.cancel()
+                })
+                .show()
+        else if (language == "US")
+            AlertDialog.Builder(this).setMessage("Want to buy a subscription?")
+                .setPositiveButton(
+                    "Yes (go to pay)",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        val browserIntent =
+                            Intent(Intent.ACTION_VIEW, Uri.parse("http://earmem.ru/#podpiska"))
+                        startActivity(browserIntent)
+                    })
+                .setNegativeButton(
+                    "I already have the code",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        AlertDialog.Builder(this).setView(v)
+                            .setPositiveButton("Activate",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    val code =
+                                        v.findViewById<EditText>(R.id.codeEdit).text.toString()
+                                    val codes: Array<String> = arrayOf(
+                                        "O4pK06gAVZ0s",
+                                        "zK32jt9CIjeb",
+                                        "0xCg18PbUQl9",
+                                        "53Ed1zv97cZS",
+                                        "Z9ak670XRtrp",
+                                        "qK09LMv4q1Ep",
+                                        "U48HCrT1Abn2",
+                                        "a8R00905Naii",
+                                        "mL6043m0rkGs",
+                                        "J90t76F8D98k",
+                                        "7YT09gVopXlo",
+                                        "40F7sX3vqrry",
+                                        "zJ484qMdk3Zc",
+                                        "RL64hHw26s2I",
+                                        "8Es5IOZTZ0bH",
+                                        "In3t34gG2HhE",
+                                        "Tl9BD938HQQ7",
+                                        "6nSf38Ne4aJZ",
+                                        "XLn21jJ0C09i",
+                                        "Bs436Ta3NXnm"
+                                    )
+                                    if (code in codes) {
+                                        AlertDialog.Builder(this)
+                                            .setMessage("You have successfully activated your subscription")
+                                            .setPositiveButton("Ок", null).show()
+                                        getSharedPreferences("val", Context.MODE_PRIVATE).edit()
+                                            .putInt("podpiska", 1).apply()
+                                    }
+                                })
+                            .setNegativeButton("Cancel",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    dialog.cancel()
+                                }).show()
+                    })
+                .setNeutralButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
+                    dialog.cancel()
+                })
+                .show()
     }
 
     // При сворачивании выключаем ненужное *надо знать life cycle

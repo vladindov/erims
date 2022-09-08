@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#32CCE1">
@@ -131,4 +130,90 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageSat"
         app:layout_constraintStart_toEndOf="@+id/imageSat"
         app:srcCompat="@drawable/ic_yee" />
+
+    <TextView
+        android:id="@+id/textMon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F6FAFD"
+        android:text="M"
+        app:layout_constraintBottom_toTopOf="@+id/imageMon"
+        app:layout_constraintEnd_toEndOf="@+id/imageMon"
+        app:layout_constraintStart_toStartOf="@+id/imageMon"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="0.861" />
+
+    <TextView
+        android:id="@+id/textTues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F6FAFD"
+        android:text="M"
+        app:layout_constraintBottom_toTopOf="@+id/imageMon"
+        app:layout_constraintEnd_toEndOf="@+id/imageTues"
+        app:layout_constraintStart_toStartOf="@+id/imageTues"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="0.851" />
+
+    <TextView
+        android:id="@+id/textWed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F6FAFD"
+        android:text="M"
+        app:layout_constraintBottom_toTopOf="@+id/imageMon"
+        app:layout_constraintEnd_toEndOf="@+id/imageWed"
+        app:layout_constraintStart_toStartOf="@+id/imageWed"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="0.851" />
+
+    <TextView
+        android:id="@+id/textThur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F6FAFD"
+        android:text="M"
+        app:layout_constraintBottom_toTopOf="@+id/imageMon"
+        app:layout_constraintEnd_toEndOf="@+id/imageThur"
+        app:layout_constraintStart_toStartOf="@+id/imageThur"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="0.851" />
+
+    <TextView
+        android:id="@+id/textFri"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#F6FAFD"
+        android:text="M"
+        app:layout_constraintBottom_toTopOf="@+id/imageMon"
+        app:layout_constraintEnd_toEndOf="@+id/imageFri"
+        app:layout_constraintStart_toStartOf="@+id/imageFri"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="0.851" />
+
+    <TextView
+        android:id="@+id/textSat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:background="#F6FAFD"
+        android:text="M"
+        app:layout_constraintBottom_toTopOf="@+id/imageMon"
+        app:layout_constraintEnd_toEndOf="@+id/imageSat"
+        app:layout_constraintStart_toStartOf="@+id/imageSat"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="0.851" />
+
+    <TextView
+        android:id="@+id/textSun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:background="#F6FAFD"
+        android:text="M"
+        app:layout_constraintBottom_toTopOf="@+id/imageMon"
+        app:layout_constraintEnd_toEndOf="@+id/imageSun"
+        app:layout_constraintStart_toStartOf="@+id/imageSun"
+        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintVertical_bias="0.841" />
 </androidx.constraintlayout.widget.ConstraintLayout>

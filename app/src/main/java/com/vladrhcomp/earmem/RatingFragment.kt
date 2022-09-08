@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,11 +21,15 @@ class RatingFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val language =
+            context?.getSharedPreferences("app", Context.MODE_PRIVATE)?.getString("language", "RU")
+
         super.onViewCreated(view, savedInstanceState)
         val image = view.findViewById<ImageView>(R.id.ratingImage)
         val text = view.findViewById<TextView>(R.id.ratingText)
         val value = 100 // всего очков
-        val days = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getString("Days", "0 0 0 0 0 0 0 11,11")
+        val days = view.context.getSharedPreferences("level", Context.MODE_PRIVATE)
+            .getString("Days", "0 0 0 0 0 0 0 11,11")
 
         val editD = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).edit()
         val sdf = SimpleDateFormat("EEEE")
@@ -39,15 +42,36 @@ class RatingFragment: Fragment() {
         }
         editD.apply()
 
-        val rating = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getInt("Rating", 0)
+        val rating =
+            view.context.getSharedPreferences("level", Context.MODE_PRIVATE).getInt("Rating", 0)
 
         val edit = view.context.getSharedPreferences("level", Context.MODE_PRIVATE).edit()
 
         edit.putString("Days", "0 0 0 0 0 0 0 $nowDate")
 
-        text.text = "$rating/$value очков"
-        val ratingP = (rating/value)*100
-        when(ratingP){
+        if (language == "RU") {
+            text.text = "$rating/$value очков"
+
+            view.findViewById<TextView>(R.id.textMon).text = " П "
+            view.findViewById<TextView>(R.id.textTues).text = " В "
+            view.findViewById<TextView>(R.id.textWed).text = " Ср "
+            view.findViewById<TextView>(R.id.textThur).text = " Ч "
+            view.findViewById<TextView>(R.id.textFri).text = " П "
+            view.findViewById<TextView>(R.id.textSat).text = " Суб "
+            view.findViewById<TextView>(R.id.textSun).text = " В "
+        } else if (language == "US") {
+            text.text = "$rating/$value points"
+
+            view.findViewById<TextView>(R.id.textMon).text = " M "
+            view.findViewById<TextView>(R.id.textTues).text = " T "
+            view.findViewById<TextView>(R.id.textWed).text = " W "
+            view.findViewById<TextView>(R.id.textThur).text = " T "
+            view.findViewById<TextView>(R.id.textFri).text = " F "
+            view.findViewById<TextView>(R.id.textSat).text = " Sat "
+            view.findViewById<TextView>(R.id.textSun).text = " Sun "
+        }
+        val ratingP = (rating / value) * 100
+        when (ratingP) {
             in 0..5 -> {
                 image.setImageResource(R.drawable.ic__0)
             }

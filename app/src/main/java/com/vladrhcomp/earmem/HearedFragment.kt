@@ -10,15 +10,19 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 
 class HearedFragment: Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.heared_text,container,false)
+    val language =
+        context?.getSharedPreferences("app", Context.MODE_PRIVATE)?.getString("language", "RU")
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.heared_text, container, false)
 
         return view
     }
@@ -30,7 +34,10 @@ class HearedFragment: Fragment() {
         val sharPref = context?.getSharedPreferences("level", Context.MODE_PRIVATE)
         val num = sharPref?.getInt("levelNum", 0)
 
-        view.findViewById<TextView>(R.id.textHearedLevel).text = "Уровень $num"
+        if (language == "RU")
+            view.findViewById<TextView>(R.id.textHearedLevel).text = "Уровень $num"
+        else if (language == "US")
+            view.findViewById<TextView>(R.id.textHearedLevel).text = "Level $num"
 
         view.findViewById<Button>(R.id.hearedButton).setOnClickListener {
             if (edit.text.toString().trim() != "") {
